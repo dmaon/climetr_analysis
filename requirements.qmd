@@ -1,0 +1,183 @@
+---
+format: 
+  html:
+    lang: fa
+    dir: rtl
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## فاز اول - جمع آوری داده
+
+### شاخص‌های مور نیاز
+
+اگر بتونم همه رو داشته باشم خوبه ولی اگر نشد فقط روی دما و بعد رطوبت
+تمرکز کنم.
+
+1.  **میانگین دمای روز (Daily Mean Temperature)** میانگین دمای ثبت‌شده در
+    یک روز. چرا مهمه؟ چون بهترین نماینده‌ی “وضعیت کلی هوا” در اون روزه.
+    در پروژه تو: می‌تونی بگی: آیا میانگین دمای رمضان با غیر رمضان فرق
+    دارد؟ بله/خیر
+
+2.  **حداقل و حداکثر دما** کمترین و بیشترین دما در هر روز. چرا مهمه؟ چون
+    میانگین دما ممکنه گمراه‌کننده باشه؛ بالا و پایین بودن شدید دما مهمه.
+    در پروژه تو: مثلاً ممکنه میانگین ثابت باشه ولی نوسان دمایی در رمضان
+    بیشتر باشد.
+
+3.  **اختلاف شب و روز (Diurnal Temperature Range)** اختلاف بین حداکثر
+    روز و حداقل شب. چرا مهمه؟ شاخصی از پایداری هوا، ابرناکی و رطوبته. در
+    پروژه تو: اگه ببینی اختلاف روز/شب در رمضان کمتره → نشونه نزدیک‌تر
+    بودن هوا به تابستان/بهار است.
+
+4.  **شاخص گرمایی (Heat Index)** دمایی که بدن انسان احساس می‌کنه، ترکیب
+    دما + رطوبت. Heat Index ≠ Temperature هوای ۳۵ درجه با رطوبت ۷۵٪ →
+    مثل ۴۳ درجه احساس می‌شود. در پروژه تو: اگر رمضان در مناطق گرم/مرطوب
+    مثل بندرعباس یا دبی بررسی بشه، Heat Index مهم‌تر از دماست.
+
+5.  **شاخص نوسان دما (Temperature Variance)** چقدر دما در طول رمضان
+    نوسان دارد؟ بیشتر یا کمتر از معمول؟
+
+6.  **روند ۳۰ روزه (Temperature Trend Slope)** آیا در ماه رمضان روند
+    افزایش یا کاهش دما داریم؟ (با استفاده از مدل خطی)
+
+7.  **شاخص روزهای گرم شدید (Extreme Heat Days)** چند روز رمضان → بالاتر
+    از ۹۰th percentile دمای سال باشد؟
+
+8.  **رطوبت نسبی (Relative Humidity)** برای Heat Index لازم است.
+
+9.  **سرعت باد (Wind Speed)** روی احساس گرما اثر دارد.
+
+10. **شاخص Discomfort Index** مشابه Heat Index دمای استرس‌زای انسان.
+
+chatgpt پیشنهاد میده شاخص های زیر رو هم جمع آوری کنم.
+
+-   دما
+
+    temp_mean
+
+    temp_min
+
+    temp_max
+
+    temp_range = temp_max - temp_min (اختلاف شب/روز)
+
+    temp_variance ← نوسان دمای روزانه
+
+    temp_rolling_sd (اختیاری)
+
+-   رطوبت
+
+    humidity_mean
+
+    humidity_min
+
+    humidity_max
+
+-   باد
+
+    wind_mean
+
+    wind_min
+
+    wind_max
+
+-   شاخص‌های مشتق‌شده
+
+    Index Discomfort
+
+    Index Trend Slope (روند دمای ۳۰ روزه)
+
+    Percentile Hot Days (روزهای بالای صدک ۹۰)
+
+این‌ها ۹۰٪ پروژه‌ات را پوشش می‌دهند.
+
+### منابع مورد نظر
+
+**IRIMO** (ایستگاه‌های ایران), فعلا به دلیل عدم دسترسی به داده ها این منبع کنسله.
+
+**NASA POWER**
+از همین داده های استفاده میکنم.
+داده ها رو با آدرس زیر به صورت فایل csv گرفتم.
+
+[لینک دانلود داده های بیرجند](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=32.86&longitude=59.22&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های تبریز](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=38.08&longitude=46.29&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های اصفهان](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=32.65&longitude=51.68&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های رشت](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=37.28&longitude=49.58&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های بندرعباس](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=27.19&longitude=56.27&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های قاهره](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=30.04&longitude=31.23&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های آنکارا](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=39.93&longitude=32.85&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های اسلو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=59.91&longitude=10.75&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های دبی](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=25.27&longitude=55.30&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+[لینک دانلود داده های اسوالبارد، نروژ](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=78.2232&longitude=15.6466&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های مسکو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=55.7558&longitude=37.6173&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+[لینک دانلود داده های بارسلون](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=41.3851&longitude=2.1734&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+[لینک دانلود داده های سنگاپور](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=1.3521&longitude=103.8198&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+[لینک دانلود داده های ریاض](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=24.7136&longitude=46.6753&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+[لینک دانلود داده های مکزیکو سیتی](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=19.4326&longitude=-99.1332&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+
+[لینک دانلود داده های لندن](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=51.5074&longitude=-0.1278&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+[لینک دانلود داده های آدلاید](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=-34.9285&longitude=138.6007&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+[لینک دانلود داده های ریودوژانیرو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=-22.9068&longitude=-43.1729&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+
+[لینک دانلود داده های نوادا](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=39.5296&longitude=-119.8138&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+
+
+:پاامترهایی که بهم داد
+
+T2M                   MERRA-2 Temperature at 2 Meters (C) 
+
+T2M_MAX               MERRA-2 Temperature at 2 Meters Maximum (C) 
+
+T2M_MIN               MERRA-2 Temperature at 2 Meters Minimum (C) 
+
+RH2M                  MERRA-2 Relative Humidity at 2 Meters (%) 
+
+WS2M                  MERRA-2 Wind Speed at 2 Meters (m/s) 
+
+WD2M                  MERRA-2 Wind Direction at 2 Meters (Degrees) 
+
+PRECTOTCORR           MERRA-2 Precipitation Corrected (mm/day) 
+
+PS                    MERRA-2 Surface Pressure (kPa) 
+
+ALLSKY_SFC_SW_DWN     CERES SYN1deg All Sky Surface Shortwave Downward Irradiance (MJ/m^2/day) 
+
+T2MDEW                MERRA-2 Dew/Frost Point at 2 Meters (C) 
+
+T2MWET                MERRA-2 Wet Bulb Temperature at 2 Meters (C) 
+
+QV2M                  MERRA-2 Specific Humidity at 2 Meters (g/kg) 
+
+
+
+**Meteostat**
+دیگه بهش نیازی نیست.
+
+### 
