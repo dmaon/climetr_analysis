@@ -1,0 +1,47 @@
+---
+title: "Data Preprocessing and Preparation Guide"
+output:
+  html_document:
+    df_print: paged
+---
+```{r include=FALSE}
+library("skimr")
+library("readr")
+library("here")
+```
+
+
+
+## Load & Inspect
+
+In this phase, we load the dataset and perform an initial inspection to understand its structure, size, and basic properties.
+first we need to load our dataset. beacuse in first 20 lines of dataset is for header section, so we sould skip it.
+```{r}
+my_data <- readr::read_csv('D:/climetr/climetr_analysis/datasets/POWER_Point_Daily_20130101_20251123_032d86N_059d22E_LST_Birjand.csv', skip = 20)
+```
+
+
+then we should inspect it to find any unusual values and know our data better.
+```{r}
+skim_without_charts(my_data)
+```
+in dataset the values for missing source data that cannot be computed or is outside of the sources availability range is -999, so we shuld mark them as na.
+columns of year should be a string type columns.
+
+check -> T2M_MIN ≤ T2M ≤ T2M_MAX
+
+## Cleaning
+
+In this phase, we clean the dataset by handling missing values, removing invalid entries, and ensuring data consistency.
+
+## Feature Preparation
+
+In this phase, we convert column names into clear, consistent, and human-readable labels to improve usability during analysis.
+
+## Feature Engineering
+
+In this phase, we create new informative variables from the existing columns to support deeper analysis and modeling.
+
+## Save Clean Data
+
+Finally, we save the cleaned and prepared dataset for later use in analysis and visualization.
