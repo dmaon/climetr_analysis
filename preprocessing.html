@@ -1630,7 +1630,7 @@ Guide</h1>
 <p>In this phase, we load the dataset and perform an initial inspection
 to understand its structure, size, and basic properties. first we need
 to load our dataset. beacuse in first 20 lines of dataset is for header
-section, so we sould skip it.</p>
+section, so we could skip it.</p>
 <pre class="r"><code>my_data &lt;- readr::read_csv(&#39;D:/climetr/climetr_analysis/datasets/POWER_Point_Daily_20130101_20251123_032d86N_059d22E_LST_Birjand.csv&#39;, skip = 20)</code></pre>
 <pre><code>## Rows: 4710 Columns: 14
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -1879,24 +1879,382 @@ data better.</p>
 </tbody>
 </table>
 <p>in dataset the values for missing source data that cannot be computed
-or is outside of the sources availability range is -999, so we shuld
-mark them as na. columns of year should be a string type columns.</p>
-<p>check -&gt; T2M_MIN ≤ T2M ≤ T2M_MAX</p>
+or is outside of the sources availability range is -999, so we should
+mark them as “na”. columns of year should be a string type columns.</p>
+<p>first we need to mark out-range values to “NA”.</p>
+<p>then we should convert year column to text format.</p>
+<p>now we need to make sure that T2M_MIN &lt;= T2M &lt;= T2M_MAX.</p>
+<pre class="r"><code>my_data %&gt;% filter(!(T2M &gt;= T2M_MIN &amp; T2M &lt;= T2M_MAX)) %&gt;% {
+  if (nrow( . &gt; 0))
+    print(&quot;Something is wrong.&quot;)
+}</code></pre>
+<p>now we should check it again.</p>
+<pre class="r"><code>skim_without_charts(my_data)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">my_data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">4710</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">14</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">13</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="13%" />
+<col width="19%" />
+<col width="5%" />
+<col width="5%" />
+<col width="8%" />
+<col width="12%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">YEAR</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">13</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col width="20%" />
+<col width="11%" />
+<col width="15%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">DOY</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">181.80</td>
+<td align="right">104.83</td>
+<td align="right">1.00</td>
+<td align="right">91.00</td>
+<td align="right">182.00</td>
+<td align="right">272.00</td>
+<td align="right">366.00</td>
+</tr>
+<tr class="even">
+<td align="left">T2M</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">13.91</td>
+<td align="right">8.43</td>
+<td align="right">-14.19</td>
+<td align="right">6.65</td>
+<td align="right">14.96</td>
+<td align="right">21.21</td>
+<td align="right">31.46</td>
+</tr>
+<tr class="odd">
+<td align="left">T2M_MAX</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">21.72</td>
+<td align="right">9.11</td>
+<td align="right">-7.33</td>
+<td align="right">14.03</td>
+<td align="right">23.11</td>
+<td align="right">29.60</td>
+<td align="right">39.92</td>
+</tr>
+<tr class="even">
+<td align="left">T2M_MIN</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">7.20</td>
+<td align="right">7.46</td>
+<td align="right">-18.52</td>
+<td align="right">0.84</td>
+<td align="right">7.88</td>
+<td align="right">13.50</td>
+<td align="right">22.39</td>
+</tr>
+<tr class="odd">
+<td align="left">RH2M</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">36.29</td>
+<td align="right">18.03</td>
+<td align="right">4.31</td>
+<td align="right">21.51</td>
+<td align="right">32.36</td>
+<td align="right">48.14</td>
+<td align="right">93.19</td>
+</tr>
+<tr class="even">
+<td align="left">WS2M</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3.92</td>
+<td align="right">1.95</td>
+<td align="right">0.74</td>
+<td align="right">2.38</td>
+<td align="right">3.41</td>
+<td align="right">5.18</td>
+<td align="right">11.60</td>
+</tr>
+<tr class="odd">
+<td align="left">WD2M</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">153.10</td>
+<td align="right">109.03</td>
+<td align="right">0.00</td>
+<td align="right">47.85</td>
+<td align="right">148.50</td>
+<td align="right">250.90</td>
+<td align="right">359.80</td>
+</tr>
+<tr class="even">
+<td align="left">PRECTOTCORR</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.34</td>
+<td align="right">1.62</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">31.26</td>
+</tr>
+<tr class="odd">
+<td align="left">PS</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">81.73</td>
+<td align="right">0.31</td>
+<td align="right">80.38</td>
+<td align="right">81.52</td>
+<td align="right">81.74</td>
+<td align="right">81.96</td>
+<td align="right">82.85</td>
+</tr>
+<tr class="even">
+<td align="left">ALLSKY_SFC_SW_DWN</td>
+<td align="right">5</td>
+<td align="right">1</td>
+<td align="right">20.68</td>
+<td align="right">7.06</td>
+<td align="right">2.44</td>
+<td align="right">14.45</td>
+<td align="right">20.93</td>
+<td align="right">27.15</td>
+<td align="right">33.73</td>
+</tr>
+<tr class="odd">
+<td align="left">T2MDEW</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">-3.61</td>
+<td align="right">5.56</td>
+<td align="right">-27.13</td>
+<td align="right">-7.12</td>
+<td align="right">-3.36</td>
+<td align="right">0.38</td>
+<td align="right">10.12</td>
+</tr>
+<tr class="even">
+<td align="left">T2MWET</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">5.15</td>
+<td align="right">6.00</td>
+<td align="right">-18.88</td>
+<td align="right">0.74</td>
+<td align="right">6.06</td>
+<td align="right">9.92</td>
+<td align="right">19.35</td>
+</tr>
+<tr class="odd">
+<td align="left">QV2M</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3.85</td>
+<td align="right">1.56</td>
+<td align="right">0.33</td>
+<td align="right">2.70</td>
+<td align="right">3.66</td>
+<td align="right">4.85</td>
+<td align="right">9.49</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="cleaning" class="section level2">
 <h2>Cleaning</h2>
 <p>In this phase, we clean the dataset by handling missing values,
-removing invalid entries, and ensuring data consistency.</p>
+removing invalid entries, and ensuring data consistency. in this case we
+remove rows that have all “NA” on important parameters.</p>
+<pre class="r"><code>find_na_rows &lt;- apply(is.na(my_data[, !names(my_data) %in% exclude_cols]), 1, all)
+idx_of_na_rows &lt;- which(find_na_rows)
+my_data &lt;- my_data[-idx_of_na_rows, ]</code></pre>
 </div>
 <div id="feature-preparation" class="section level2">
 <h2>Feature Preparation</h2>
 <p>In this phase, we convert column names into clear, consistent, and
 human-readable labels to improve usability during analysis.</p>
+<p>parameters information:</p>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">parameter</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">T2M</td>
+<td align="left">MERRA-2 Temperature at 2 Meters (C)</td>
+</tr>
+<tr class="even">
+<td align="left">T2M_MAX</td>
+<td align="left">MERRA-2 Temperature at 2 Meters Maximum (C)</td>
+</tr>
+<tr class="odd">
+<td align="left">T2M_MIN</td>
+<td align="left">MERRA-2 Temperature at 2 Meters Minimum (C)</td>
+</tr>
+<tr class="even">
+<td align="left">RH2M</td>
+<td align="left">MERRA-2 Relative Humidity at 2 Meters (%)</td>
+</tr>
+<tr class="odd">
+<td align="left">WS2M</td>
+<td align="left">MERRA-2 Wind Speed at 2 Meters (m/s)</td>
+</tr>
+<tr class="even">
+<td align="left">WD2M</td>
+<td align="left">MERRA-2 Wind Direction at 2 Meters (Degrees)</td>
+</tr>
+<tr class="odd">
+<td align="left">PRECTOTCORR</td>
+<td align="left">MERRA-2 Precipitation Corrected (mm/day)</td>
+</tr>
+<tr class="even">
+<td align="left">PS</td>
+<td align="left">MERRA-2 Surface Pressure (kPa)</td>
+</tr>
+<tr class="odd">
+<td align="left">ALLSKY_SFC_SW_DWN</td>
+<td align="left">CERES SYN1deg All Sky Surface Shortwave Downward
+Irradiance (MJ/m^2/day)</td>
+</tr>
+<tr class="even">
+<td align="left">T2MDEW</td>
+<td align="left">MERRA-2 Dew/Frost Point at 2 Meters (C)</td>
+</tr>
+<tr class="odd">
+<td align="left">T2MWET</td>
+<td align="left">MERRA-2 Wet Bulb Temperature at 2 Meters (C)</td>
+</tr>
+<tr class="even">
+<td align="left">QV2M</td>
+<td align="left">MERRA-2 Specific Humidity at 2 Meters (g/kg)</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>my_data &lt;- my_data %&gt;% 
+  rename(
+    day_of_year              = DOY,
+    temp_air_mean_c          = T2M,
+    temp_air_max_c           = T2M_MAX,
+    temp_air_min_c           = T2M_MIN,
+    humidity_relative_percent = RH2M,
+    wind_speed_ms            = WS2M,
+    wind_direction_deg       = WD2M,
+    precip_total_mm          = PRECTOTCORR,
+    pressure_surface_kpa     = PS,
+    radiation_solar_mj_m2_day = ALLSKY_SFC_SW_DWN,
+    temp_dewpoint_c          = T2MDEW,
+    temp_wetbulb_c           = T2MWET,
+    humidity_specific_gpkg   = QV2M
+  )</code></pre>
 </div>
 <div id="feature-engineering" class="section level2">
 <h2>Feature Engineering</h2>
 <p>In this phase, we create new informative variables from the existing
 columns to support deeper analysis and modeling.</p>
+<p><code>year month day day_of_year (خیلی مهم برای نمودارهای اقلیمی) maybe: season (optional) date temp_range = T2M_MAX - T2M_MIN is_ramadan VPD Rolling Mean, Rolling Sd(Standard deviation) Lag Features(3, 7, 30) Daily Anomaly Heat Index heat_index_relative_temp  = HI(today) - T(today)</code></p>
 </div>
 <div id="save-clean-data" class="section level2">
 <h2>Save Clean Data</h2>
