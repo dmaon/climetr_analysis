@@ -1628,9 +1628,10 @@ Guide</h1>
 <div id="load-inspect" class="section level2">
 <h2>Load &amp; Inspect</h2>
 <p>In this phase, we load the dataset and perform an initial inspection
-to understand its structure, size, and basic properties. first we need
-to load our dataset. beacuse in first 20 lines of dataset is for header
-section, so we could skip it.</p>
+to understand its structure, size, and basic properties.<br />
+The first 20 lines of the dataset contain metadata and header
+information provided by NASA POWER, therefore they are skipped during
+data import.</p>
 <pre class="r"><code>my_data &lt;- readr::read_csv(&#39;D:/climetr/climetr_analysis/datasets/POWER_Point_Daily_20130101_20251123_032d86N_059d22E_LST_Birjand.csv&#39;, skip = 20)</code></pre>
 <pre><code>## Rows: 4710 Columns: 14
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -1880,9 +1881,12 @@ data better.</p>
 </table>
 <p>in dataset the values for missing source data that cannot be computed
 or is outside of the sources availability range is -999, so we should
-mark them as “na”. columns of year should be a string type columns.</p>
+mark them as “na”.</p>
 <p>first we need to mark out-range values to “NA”.</p>
-<p>then we should convert year column to text format.</p>
+<pre class="r"><code>exclude_cols &lt;- c(&quot;YEAR&quot;, &quot;DOY&quot;)
+my_data[, !colnames(my_data) %in% exclude_cols] &lt;- 
+  lapply(my_data[, !colnames(my_data) %in% exclude_cols], 
+         function(col) { col[col == -999] &lt;- NA; col })</code></pre>
 <p>now we need to make sure that T2M_MIN &lt;= T2M &lt;= T2M_MAX.</p>
 <pre class="r"><code>my_data %&gt;% filter(!(T2M &gt;= T2M_MIN &amp; T2M &lt;= T2M_MAX)) %&gt;% {
   if (nrow( . &gt; 0))
@@ -1914,73 +1918,32 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">character</td>
-<td align="left">1</td>
+<td align="left">numeric</td>
+<td align="left">14</td>
 </tr>
 <tr class="odd">
-<td align="left">numeric</td>
-<td align="left">13</td>
-</tr>
-<tr class="even">
 <td align="left">________________________</td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Group variables</td>
 <td align="left">None</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Variable type: character</strong></p>
+<p><strong>Variable type: numeric</strong></p>
 <table>
 <colgroup>
-<col width="19%" />
-<col width="13%" />
-<col width="19%" />
-<col width="5%" />
-<col width="5%" />
+<col width="18%" />
+<col width="10%" />
+<col width="14%" />
 <col width="8%" />
-<col width="12%" />
-<col width="15%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">min</th>
-<th align="right">max</th>
-<th align="right">empty</th>
-<th align="right">n_unique</th>
-<th align="right">whitespace</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">YEAR</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">13</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: numeric</strong></p>
-<table style="width:100%;">
-<colgroup>
-<col width="20%" />
-<col width="11%" />
-<col width="15%" />
 <col width="7%" />
-<col width="7%" />
-<col width="7%" />
-<col width="6%" />
-<col width="7%" />
-<col width="7%" />
-<col width="7%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1998,6 +1961,18 @@ mark them as “na”. columns of year should be a string type columns.</p>
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">YEAR</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2018.95</td>
+<td align="right">3.72</td>
+<td align="right">2013.00</td>
+<td align="right">2016.00</td>
+<td align="right">2019.00</td>
+<td align="right">2022.00</td>
+<td align="right">2025.00</td>
+</tr>
+<tr class="even">
 <td align="left">DOY</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2009,7 +1984,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">272.00</td>
 <td align="right">366.00</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">T2M</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2021,7 +1996,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">21.21</td>
 <td align="right">31.46</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">T2M_MAX</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2033,7 +2008,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">29.60</td>
 <td align="right">39.92</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">T2M_MIN</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2045,7 +2020,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">13.50</td>
 <td align="right">22.39</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RH2M</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2057,7 +2032,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">48.14</td>
 <td align="right">93.19</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WS2M</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2069,7 +2044,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">5.18</td>
 <td align="right">11.60</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">WD2M</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2081,7 +2056,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">250.90</td>
 <td align="right">359.80</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">PRECTOTCORR</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2093,7 +2068,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">0.00</td>
 <td align="right">31.26</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">PS</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2105,7 +2080,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">81.96</td>
 <td align="right">82.85</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">ALLSKY_SFC_SW_DWN</td>
 <td align="right">5</td>
 <td align="right">1</td>
@@ -2117,7 +2092,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">27.15</td>
 <td align="right">33.73</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">T2MDEW</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2129,7 +2104,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">0.38</td>
 <td align="right">10.12</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">T2MWET</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2141,7 +2116,7 @@ mark them as “na”. columns of year should be a string type columns.</p>
 <td align="right">9.92</td>
 <td align="right">19.35</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">QV2M</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -2235,6 +2210,7 @@ Irradiance (MJ/m^2/day)</td>
 </table>
 <pre class="r"><code>my_data &lt;- my_data %&gt;% 
   rename(
+    year = YEAR,
     day_of_year              = DOY,
     temp_air_mean_c          = T2M,
     temp_air_max_c           = T2M_MAX,
@@ -2253,13 +2229,203 @@ Irradiance (MJ/m^2/day)</td>
 <div id="feature-engineering" class="section level2">
 <h2>Feature Engineering</h2>
 <p>In this phase, we create new informative variables from the existing
-columns to support deeper analysis and modeling.</p>
-<p><code>year month day day_of_year (خیلی مهم برای نمودارهای اقلیمی) maybe: season (optional) date temp_range = T2M_MAX - T2M_MIN is_ramadan VPD Rolling Mean, Rolling Sd(Standard deviation) Lag Features(3, 7, 30) Daily Anomaly Heat Index heat_index_relative_temp  = HI(today) - T(today)</code></p>
+columns to support deeper analysis and help us maybe explore even more
+than our base hyposis.</p>
+<p><strong>date</strong>: The full calendar date was reconstructed from
+the year and day-of-year (DOY) fields to facilitate time-series
+visualization, aggregation, and seasonal analysis.</p>
+<pre class="r"><code>my_data &lt;- my_data %&gt;% mutate(full_date = as.Date(day_of_year - 1, origin = paste0(year, &quot;-01-01&quot;)))
+my_data &lt;- my_data %&gt;% mutate(month_number = month(full_date))</code></pre>
+<p><strong>temp_range</strong>: Daily temperature range computed as
+T2M_MAX - T2M_MIN; useful for detecting instability, heat stress, and
+diurnal variability.</p>
+<pre class="r"><code>my_data &lt;- my_data %&gt;% mutate(temp_range = temp_air_max_c - temp_air_min_c)</code></pre>
+<p><strong>VPD</strong>: Vapor Pressure Deficit; a key indicator of
+atmospheric dryness and plant stress.</p>
+<pre class="r"><code>es &lt;- function(T) 0.6108 * exp(17.27 * T / (T + 237.3))
+my_data &lt;- my_data %&gt;% mutate(vpd_kpa = es(temp_air_mean_c) - es(temp_dewpoint_c))</code></pre>
+<p><strong>heat_index</strong>: The perceived temperature calculated
+strictly following the NOAA/National Weather Service (NWS) methodology.
+To facilitate different analytical needs, two distinct variables were
+derived: <strong>HI_standard</strong>: Represents the baseline apparent
+temperature for all observations using the complete NOAA logic. This
+includes the “Simple Formula” for mild conditions and the “Rothfusz
+Regression” for higher temperatures, providing a continuous series for
+climatic trend analysis. <strong>HI_filtered</strong>: Specifically
+identifies significant heat stress events. In this column, HI values are
+recorded only when physiological thresholds are met (<span class="math inline">\(T \ge 27^\circ C\)</span> and <span class="math inline">\(RH \ge 40\%\)</span>), with all other conditions
+set to NA to isolate periods of thermal risk for feature
+engineering.</p>
+<pre class="r"><code>compute_heat_index_noaa &lt;- function(temp_c, rh) {
+  # 1. Handle invalid humidity values (outside 0-100 range) by converting to NA
+  rh[rh &lt; 0 | rh &gt; 100] &lt;- NA_real_
+  
+  # 2. Convert air temperature from Celsius to Fahrenheit
+  temp_f &lt;- 1.8 * temp_c + 32.0
+  
+  # 3. Calculate the &quot;Simple Formula&quot; for the Heat Index
+  hi_simple &lt;- 0.5 * (temp_f + 61.0 + (temp_f - 68.0) * 1.2 + rh * 0.094)
+  
+  # Initialize the final HI vector with the simple formula results (as per NOAA logic)
+  hi_final_f &lt;- hi_simple
+  
+  # 4. Handle very low temperatures (below 40°F / 4.44°C)
+  # According to NOAA/NWS, the Heat Index is equal to the air temperature in these cases
+  low_temp_idx &lt;- which(temp_f &lt;= 40.0)
+  if (length(low_temp_idx) &gt; 0) {
+    hi_final_f[low_temp_idx] &lt;- temp_f[low_temp_idx]
+  }
+  
+  # 5. Calculate the average of hi_simple and temp_f to determine the threshold for regression
+  hi_avg &lt;- (hi_simple + temp_f) / 2
+  
+  # Identify records that require the complex Rothfusz Regression (HI &gt;= 80°F)
+  use_roth &lt;- !is.na(hi_avg) &amp; (hi_avg &gt;= 80.0) &amp; (temp_f &gt; 40.0)
+  idx &lt;- which(use_roth)
+  
+  if (length(idx) &gt; 0) {
+    Tf &lt;- temp_f[idx]
+    Rh &lt;- rh[idx]
+    
+    # Primary Rothfusz Regression Equation
+    hi_roth &lt;- -42.379 + 
+               2.04901523 * Tf + 
+               10.14333127 * Rh - 
+               0.22475541 * Tf * Rh - 
+               0.00683783 * Tf^2 - 
+               0.05481717 * Rh^2 + 
+               0.00122874 * Tf^2 * Rh + 
+               0.00085282 * Tf * Rh^2 - 
+               0.00000199 * Tf^2 * Rh^2
+    
+    # Low Relative Humidity Adjustment (Low RH Adjustment)
+    low_cond &lt;- (Rh &lt; 13) &amp; (Tf &gt;= 80 &amp; Tf &lt;= 112)
+    if (any(low_cond)) {
+      adj_low &lt;- ((13 - Rh[low_cond]) / 4) * sqrt(pmax(0, (17 - abs(Tf[low_cond] - 95)) / 17))
+      hi_roth[low_cond] &lt;- hi_roth[low_cond] - adj_low
+    }
+    
+    # High Relative Humidity Adjustment (High RH Adjustment)
+    high_cond &lt;- (Rh &gt; 85) &amp; (Tf &gt;= 80 &amp; Tf &lt;= 87)
+    if (any(high_cond)) {
+      adj_high &lt;- ((Rh[high_cond] - 85) / 10) * ((87 - Tf[high_cond]) / 5)
+      hi_roth[high_cond] &lt;- hi_roth[high_cond] + adj_high
+    }
+    
+    # Replace simple values with the more precise regression results where applicable
+    hi_final_f[idx] &lt;- hi_roth
+  }
+  
+  # Final unit conversion back to Celsius for output
+  hi_final_c &lt;- (hi_final_f - 32) * (5/9)
+  return(hi_final_c)
+}
+my_data &lt;- my_data %&gt;%
+  mutate(
+    HI_standard = compute_heat_index_noaa(temp_air_mean_c, humidity_relative_percent),
+    HI_filtered = ifelse(temp_air_mean_c &gt;= 27 &amp; humidity_relative_percent &gt;= 40, HI_standard, NA)
+  )</code></pre>
+<p><strong>heat_index_rel_temp (Thermal Discomfort Delta)</strong>:This
+metric quantifies the impact of humidity on human perceived temperature,
+calculated as the difference between the Heat Index and the actual air
+temperature (HI_standard - T_actual). It measures the “additional
+thermal load” imposed on the body, where:</p>
+<p><strong>Positive Values (&gt; 0)</strong>: Indicate that humidity is
+hindering the body’s ability to cool itself through sweat evaporation,
+making it feel warmer than the actual thermometer reading (potential
+heat stress).</p>
+<p><strong>Zero (0)</strong>: Indicates that humidity has no added
+effect on perceived temperature, often occurring in cool weather or at a
+neutral humidity balance. Negative Values (&lt; 0): Occur in extremely
+dry conditions where rapid evaporation can lead to a cooling sensation,
+making the air feel slightly cooler than its actual temperature.</p>
+<pre class="r"><code>my_data &lt;- my_data %&gt;%
+  mutate(heat_index_rel_temp = HI_standard - temp_air_mean_c)</code></pre>
+<p><strong>is_ramadan</strong>: Identifies dates within Ramadan using
+the Kuwaiti Algorithm to analyze potential thermal anomalies or
+temperature shifts during the Holy Month compared to non-Ramadan periods
+from 2013 to the 2025. Note that a 1 or 2-day variance from local moon
+sightings may occur due to the nature of the mathematical tabular model;
+however, this is considered negligible in long-term statistical analysis
+as it does not significantly impact the overall climatic trends.</p>
+<pre class="r"><code>is_ramadan_kuwaiti &lt;- function(date) {
+  # Ensure input is in Date format
+  d &lt;- as.Date(date)
+  
+  # Calculate Julian Day Number (Microsoft Standard offset)
+  jd &lt;- as.numeric(d) + 2440588
+  
+  # Kuwaiti Algorithm parameters for lunar cycle synchronization
+  l &lt;- jd - 1948440 + 10632
+  n &lt;- floor((l - 1) / 10631)
+  l &lt;- l - 10631 * n + 354
+  
+  # Determine Islamic Year and Month through cyclical iteration
+  j &lt;- (floor((10985 - l) / 5316)) * (floor((50 * l) / 17719)) + 
+       (floor(l / 5670)) * (floor((43 * l) / 15238))
+  
+  l &lt;- l - (floor((30 - j) / 20)) * (floor((17719 * j) / 50)) - 
+       (floor(j / 25)) * (floor((15238 * j) / 43)) + 29
+  
+  # Calculate Hijri Month (9 corresponds to Ramadan)
+  m &lt;- floor((24 * l) / 709) 
+  
+  # Calculate Hijri Year
+  y &lt;- n * 30 + j - 30       
+  
+  # Return TRUE if the month is Ramadan (9)
+  return(m == 9)
+}
+
+
+my_data &lt;- my_data %&gt;%
+   mutate(is_ramadan = sapply(full_date, is_ramadan_kuwaiti))</code></pre>
+<p><strong>Rolling Statistics &amp; Anomalies</strong>: Calculated 7-day
+and 30-day moving averages and standard deviations to smooth
+fluctuations and quantify variability. Additionally, temperature
+anomalies are derived to detect deviations from seasonal norms during
+the Ramadan period. These features highlight days that are unusually
+warm or cold compared to the typical local weather. By calculating the
+distance from the 30-day average, we can classify “extreme” events that
+stand out from the normal seasonal patterns.</p>
+<pre class="r"><code>my_data &lt;- my_data %&gt;%
+  mutate(
+    rolling_avg_7 = rollmean(temp_air_mean_c, k = 7,  align = &quot;right&quot;, fill = NA),
+    rolling_avg_30 = rollmean(temp_air_mean_c, k = 30, align = &quot;right&quot;, fill = NA),
+    rolling_sd_7 = rollapply(temp_air_mean_c, width = 7, FUN = sd, align = &quot;right&quot;, fill = NA),
+    rolling_sd_30 = rollapply(temp_air_mean_c, width = 30, FUN = sd, align = &quot;right&quot;, fill = NA),
+    temp_anomaly = temp_air_mean_c - rolling_avg_30,
+    is_extreme_hot = temp_air_mean_c &gt; (rolling_avg_30 + 2 * rolling_sd_30),
+    is_extreme_cold = temp_air_mean_c &lt; (rolling_avg_30 - 2 * rolling_sd_30)
+  )</code></pre>
+<p><strong>daily_anomaly</strong>: Deviation of the daily value from its
+multi-year climatological mean computed for the same day of year (DOY),
+used to remove seasonal effects and highlight interannual
+variability.</p>
+<pre class="r"><code>climatology &lt;- my_data %&gt;%
+  group_by(day_of_year) %&gt;%
+  summarise(
+    mean_temp_doy = mean(temp_air_mean_c, na.rm = TRUE),
+    mean_hi_doy   = mean(heat_index_rel_temp, na.rm = TRUE),
+    .groups = &quot;drop&quot;
+  )
+
+my_data &lt;- my_data %&gt;%
+  left_join(climatology, by = c(&quot;day_of_year&quot;)) %&gt;%
+  mutate(
+    temp_anomaly = temp_air_mean_c - mean_temp_doy,
+    hi_anomaly   = heat_index_rel_temp - mean_hi_doy
+  )</code></pre>
+<p>These engineered features allow the dataset to better represent
+seasonal patterns, human-perceived temperatures, atmospheric stress, and
+short-term temporal dynamics. They also make the data more suitable for
+exploratory analysis, statistical modeling, and visualization.</p>
 </div>
 <div id="save-clean-data" class="section level2">
 <h2>Save Clean Data</h2>
 <p>Finally, we save the cleaned and prepared dataset for later use in
 analysis and visualization.</p>
+<pre class="r"><code>my_data &lt;- readr::write_csv(my_data, &#39;D:/climetr/climetr_analysis/datasets/birjand_clean_dataset.csv&#39;)</code></pre>
 </div>
 
 

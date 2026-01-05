@@ -17,7 +17,8 @@ library("xts")
 
 ## Load & Inspect
 
-In this phase, we load the dataset and perform an initial inspection to understand its structure, size, and basic properties. first we need to load our dataset. beacuse in first 20 lines of dataset is for header section, so we could skip it.
+In this phase, we load the dataset and perform an initial inspection to understand its structure, size, and basic properties.  
+The first 20 lines of the dataset contain metadata and header information provided by NASA POWER, therefore they are skipped during data import.
 
 ```{r}
 my_data <- readr::read_csv('D:/climetr/climetr_analysis/datasets/POWER_Point_Daily_20130101_20251123_032d86N_059d22E_LST_Birjand.csv', skip = 20)
@@ -29,21 +30,15 @@ then we should inspect it to find any unusual values and know our data better.
 skim_without_charts(my_data)
 ```
 
-in dataset the values for missing source data that cannot be computed or is outside of the sources availability range is -999, so we should mark them as "na". columns of year should be a string type columns.
+in dataset the values for missing source data that cannot be computed or is outside of the sources availability range is -999, so we should mark them as "na".
 
 first we need to mark out-range values to "NA".
 
-```{r include=FALSE}
+```{r}
 exclude_cols <- c("YEAR", "DOY")
 my_data[, !colnames(my_data) %in% exclude_cols] <- 
   lapply(my_data[, !colnames(my_data) %in% exclude_cols], 
          function(col) { col[col == -999] <- NA; col })
-```
-
-then we should convert year column to text format.
-
-```{r include=FALSE}
-my_data <- my_data %>% mutate(YEAR = as.character(YEAR))
 ```
 
 now we need to make sure that T2M_MIN \<= T2M \<= T2M_MAX.
@@ -118,24 +113,27 @@ my_data <- my_data %>%
 
 In this phase, we create new informative variables from the existing columns to support deeper analysis and help us maybe explore even more than our base hyposis.
 
-date: Full calendar date reconstructed from year and DOY for easier plotting and merging.
+**date**: The full calendar date was reconstructed from the year and day-of-year (DOY) fields to facilitate time-series visualization, aggregation, and seasonal analysis.
+
 ```{r}
 my_data <- my_data %>% mutate(full_date = as.Date(day_of_year - 1, origin = paste0(year, "-01-01")))
 my_data <- my_data %>% mutate(month_number = month(full_date))
 ```
 
-temp_range: Daily temperature range computed as T2M_MAX - T2M_MIN; useful for detecting instability, heat stress, and diurnal variability.
+**temp_range**: Daily temperature range computed as T2M_MAX - T2M_MIN; useful for detecting instability, heat stress, and diurnal variability.
 ```{r}
 my_data <- my_data %>% mutate(temp_range = temp_air_max_c - temp_air_min_c)
 ```
 
-VPD: Vapor Pressure Deficit; a key indicator of atmospheric dryness and plant stress.
+**VPD**: Vapor Pressure Deficit; a key indicator of atmospheric dryness and plant stress.
 ```{r}
 es <- function(T) 0.6108 * exp(17.27 * T / (T + 237.3))
 my_data <- my_data %>% mutate(vpd_kpa = es(temp_air_mean_c) - es(temp_dewpoint_c))
 ```
 
-heat_index: The perceived temperature calculated strictly following the NOAA/National Weather Service (NWS) methodology. To facilitate different analytical needs, two distinct variables were derived:HI_standard: Represents the baseline apparent temperature for all observations using the complete NOAA logic. This includes the "Simple Formula" for mild conditions and the "Rothfusz Regression" for higher temperatures, providing a continuous series for climatic trend analysis.HI_filtered: Specifically identifies significant heat stress events. In this column, HI values are recorded only when physiological thresholds are met ($T \ge 27^\circ C$ and $RH \ge 40\%$))(T >= 27c and RH >= 40%), with all other conditions set to NA to isolate periods of thermal risk for feature engineering.
+**heat_index**: The perceived temperature calculated strictly following the NOAA/National Weather Service (NWS) methodology. To facilitate different analytical needs, two distinct variables were derived:
+**HI_standard**: Represents the baseline apparent temperature for all observations using the complete NOAA logic. This includes the "Simple Formula" for mild conditions and the "Rothfusz Regression" for higher temperatures, providing a continuous series for climatic trend analysis.
+**HI_filtered**: Specifically identifies significant heat stress events. In this column, HI values are recorded only when physiological thresholds are met ($T \ge 27^\circ C$ and $RH \ge 40\%$), with all other conditions set to NA to isolate periods of thermal risk for feature engineering.
 ```{r}
 compute_heat_index_noaa <- function(temp_c, rh) {
   # 1. Handle invalid humidity values (outside 0-100 range) by converting to NA
@@ -207,16 +205,19 @@ my_data <- my_data %>%
     HI_filtered = ifelse(temp_air_mean_c >= 27 & humidity_relative_percent >= 40, HI_standard, NA)
   )
 ```
-heat_index_rel_temp (Thermal Discomfort Delta):This metric quantifies the impact of humidity on human perceived temperature, calculated as the difference between the Heat Index and the actual air temperature ($HI_standard} - T_actual$). It measures the "additional thermal load" imposed on the body, where:
-Positive Values (> 0): Indicate that humidity is hindering the body's ability to cool itself through sweat evaporation, making it feel warmer than the actual thermometer reading (potential heat stress).
-Zero (0): Indicates that humidity has no added effect on perceived temperature, often occurring in cool weather or at a neutral humidity balance.
+
+**heat_index_rel_temp (Thermal Discomfort Delta)**:This metric quantifies the impact of humidity on human perceived temperature, calculated as the difference between the Heat Index and the actual air temperature (HI_standard - T_actual). It measures the "additional thermal load" imposed on the body, where:
+
+**Positive Values (> 0)**: Indicate that humidity is hindering the body's ability to cool itself through sweat evaporation, making it feel warmer than the actual thermometer reading (potential heat stress).
+
+**Zero (0)**: Indicates that humidity has no added effect on perceived temperature, often occurring in cool weather or at a neutral humidity balance.
 Negative Values (< 0): Occur in extremely dry conditions where rapid evaporation can lead to a cooling sensation, making the air feel slightly cooler than its actual temperature.
 ```{r}
 my_data <- my_data %>%
   mutate(heat_index_rel_temp = HI_standard - temp_air_mean_c)
 ```
 
-is_ramadan: Identifies dates within Ramadan using the Kuwaiti Algorithm to analyze potential thermal anomalies or temperature shifts during the Holy Month compared to non-Ramadan periods from 2013 to the 2025. Note that a 1 or 2-day variance from local moon sightings may occur due to the nature of the mathematical tabular model; however, this is considered negligible in long-term statistical analysis as it does not significantly impact the overall climatic trends.
+**is_ramadan**: Identifies dates within Ramadan using the Kuwaiti Algorithm to analyze potential thermal anomalies or temperature shifts during the Holy Month compared to non-Ramadan periods from 2013 to the 2025. Note that a 1 or 2-day variance from local moon sightings may occur due to the nature of the mathematical tabular model; however, this is considered negligible in long-term statistical analysis as it does not significantly impact the overall climatic trends.
 ```{r}
 is_ramadan_kuwaiti <- function(date) {
   # Ensure input is in Date format
@@ -253,7 +254,7 @@ my_data <- my_data %>%
 ```
 
 
-Rolling Statistics & Anomalies – Calculated 7-day and 30-day moving averages and standard deviations to smooth fluctuations and quantify variability. Additionally, temperature anomalies are derived to detect deviations from seasonal norms during the Ramadan period. These features highlight days that are unusually warm or cold compared to the typical local weather. By calculating the distance from the 30-day average, we can classify "extreme" events that stand out from the normal seasonal patterns.
+**Rolling Statistics & Anomalies**: Calculated 7-day and 30-day moving averages and standard deviations to smooth fluctuations and quantify variability. Additionally, temperature anomalies are derived to detect deviations from seasonal norms during the Ramadan period. These features highlight days that are unusually warm or cold compared to the typical local weather. By calculating the distance from the 30-day average, we can classify "extreme" events that stand out from the normal seasonal patterns.
 ```{r}
 my_data <- my_data %>%
   mutate(
@@ -267,18 +268,31 @@ my_data <- my_data %>%
   )
 ```
 
+**daily_anomaly**: Deviation of the daily value from its multi-year climatological mean computed for the same day of year (DOY), used to remove seasonal effects and highlight interannual variability.
+```{r}
+climatology <- my_data %>%
+  group_by(day_of_year) %>%
+  summarise(
+    mean_temp_doy = mean(temp_air_mean_c, na.rm = TRUE),
+    mean_hi_doy   = mean(heat_index_rel_temp, na.rm = TRUE),
+    .groups = "drop"
+  )
 
-
-
-Lag features (lag_3, lag_7, lag_30) – Previous values of key variables to capture temporal dependencies.
-
-daily_anomaly – Deviation of today’s temperature from its multi-year climatological mean for the same day-of-year.
+my_data <- my_data %>%
+  left_join(climatology, by = c("day_of_year")) %>%
+  mutate(
+    temp_anomaly = temp_air_mean_c - mean_temp_doy,
+    hi_anomaly   = heat_index_rel_temp - mean_hi_doy
+  )
+```
 
 These engineered features allow the dataset to better represent seasonal patterns, human-perceived temperatures, atmospheric stress, and short-term temporal dynamics. They also make the data more suitable for exploratory analysis, statistical modeling, and visualization.
-
-
 
 
 ## Save Clean Data
 
 Finally, we save the cleaned and prepared dataset for later use in analysis and visualization.
+```{r}
+my_data <- readr::write_csv(my_data, 'D:/climetr/climetr_analysis/datasets/birjand_clean_dataset.csv')
+```
+
