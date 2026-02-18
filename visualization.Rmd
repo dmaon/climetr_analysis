@@ -16,7 +16,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library("tidyverse")
 library("lubridate")
-
+library("broom")
+library("trend")
+library("Kendall") 
 ```
 
 ## Loading the cleaned dataset
@@ -245,6 +247,7 @@ my_data %>% filter(year == selected_year) %>%
 ```
 
 
+## Recent temperatures comparations from 2021-2025
 This plot overlays loess-smoothed daily mean temperature curves for the last five years (2021–2025), allowing direct visual comparison of seasonal patterns and inter-annual differences.
 ```{r, fig.width=12, fig.height=6}
 my_colors <- c(
@@ -307,10 +310,60 @@ p <- ggplot() +
 print(p)
 ```
 
+## Comparing end-of-Ramadan rolling average to previous years
+For each year, we take the rolling 30-day average temperature on the last day of Ramadan and compare it to the same day-of-year in all previous years. This helps answer: "Was the temperature at the end of Ramadan in year X unusually warm or cold compared to historical values on the same calendar date?".
+```{r}
+top_padding <- 0.2
+start_date <- 2014
+end_date <- 2025
+plots <- c()
+
+for (ith_year in end_date:(start_date + 1)) {
+  ramadan_data <- my_data %>% 
+    filter(year == ith_year & is_ramadan == TRUE) %>% 
+    select(day_of_year, full_date, rolling_avg_30)
+  
+  last_day_index <- which.max(ramadan_data$day_of_year)
+  last_day_doy <- ramadan_data$day_of_year[last_day_index]
+  last_day_date <- ramadan_data$full_date[last_day_index]
+  ramadan_temperature <- ramadan_data$rolling_avg_30[last_day_index]
+  
+  data <- my_data %>% 
+    filter(day_of_year == last_day_doy & year >= start_date & year <= ith_year) %>% 
+    select(day_of_year, full_date, year, rolling_avg_30)
+  
+  the_plot <- data %>% 
+    ggplot() +
+    geom_point(aes(x = full_date, y = rolling_avg_30), color = "blue") +
+    labs(title = paste0("30-day Rolling Avg on Last Day of Ramadan ", ith_year, " vs Past Years"),
+         subtitle = paste0("Comparing end-of-Ramadan temperature of ", ith_year, " to same date in previous years"), x = "Year", y = "30-day Rolling Avgerage Temperature (C°)",) +
+    annotate("text", x = last_day_date, y = ramadan_temperature, 
+             label = "x", color = "red") +
+    scale_x_date(date_breaks = "12 month", date_labels = "%Y") +
+    scale_y_continuous(breaks = seq(-40, 40, 5)) +
+    geom_hline(yintercept = mean(data$rolling_avg_30), linetype = "dashed", color = "darkgreen", linewidth = 1) +
+    annotate("text", x = mean(data$full_date), y = mean(data$rolling_avg_30) + top_padding,
+             label = paste0("Historical Mean = ", round(mean(data$rolling_avg_30), 2)), color = "darkgreen") +
+    theme(plot.margin = margin(20, 20, 20, 20))
+  
+  # Add value labels for each point
+  for (idx in 1:nrow(data)) {
+    the_plot <- the_plot + 
+      annotate("text", x = data[[idx, "full_date"]], 
+               y = data[[idx, "rolling_avg_30"]] + top_padding,
+               label = round(data[[idx, "rolling_avg_30"]], 2), angle = 0)
+  }
+  
+  plots <- c(plots, the_plot)
+}
+
+plots
+```
 
 
-5. تفاوت میانگین دمای ماه های سال در سال های مختلف
-now i want to plot each month period compared to past
+
+## Monthly mean Heat Index trends across years
+This section calculates the mean Heat Index for each month across all years and fits linear trends to detect whether specific months are experiencing systematic warming or cooling over time.
 ```{r}
 data <- tibble()
 plots <- c()
@@ -329,25 +382,22 @@ for (month in 1:12) {
     
     temp_data <- rbind(temp_data, tibble(year=year(start_date), month=month(start_date), mean_temperature=mean_temperature, mean_heat_index=mean_heat_index))
   }
-  
-  # the_plot = temp_data %>% ggplot() +
-  #   geom_line(mapping = aes(x=year, y=mean_temperature)) +
-  #   labs(title=paste0("Compare temperature of each month with past"), subtitle = paste0("Comparing ", month(paste0(year, "-", month, "-", "01"), label = T, abbr = F), " from ", all_years[1], " to ", all_years[length(all_years)])) 
-  # plots <- c(plots, the_plot)
 
   the_plot = temp_data %>% ggplot() +
-geom_line(aes(x = year, y = mean_heat_index), color = "grey70", linewidth = 0.6) +   # خط اصلی نقاط
+geom_line(aes(x = year, y = mean_heat_index), color = "grey70", linewidth = 0.6) +
 geom_smooth(
   aes(x = year, y = mean_heat_index),
-  method = "lm",               # ← مهم‌ترین تغییر
-  se = FALSE,                  # بدون بازه اطمینان (اگر نمی‌خواهی شلوغ بشه)
+  method = "lm",
+  se = FALSE, 
   color = "red", linewidth = 1.3, linetype = "solid"
 ) +
 geom_point(aes(x = year, y = mean_heat_index), color = "darkblue", size = 2.2) +
-    labs(x="Year", title=paste0("Compare heat index of each month with past"), subtitle = paste0("Comparing ", month(paste0(year, "-", month, "-", "01"), label = T, abbr = F), " from ", all_years[1], " to ", all_years[length(all_years)])) +
+labs(x = "Year", y = "Mean Heat Index (C°)", 
+         title = paste0("Mean Heat Index Trend – ", month.name[month]),
+         subtitle = paste0(month.name[month], " from ", min(all_years), " to ", max(all_years))) +
     scale_x_continuous(
-    breaks = seq(min(temp_data$year), max(temp_data$year), by = 1),  # هر سال یک تیک
-    labels = function(x) floor(x)   # یا as.integer(x) یا round(x, 0)
+    breaks = seq(min(temp_data$year), max(temp_data$year), by = 1),
+    labels = function(x) floor(x)
   ) +
 geom_text(
   aes(
@@ -367,36 +417,44 @@ scale_color_manual(values = c("blue", "red"), guide = "none")
 plots
 ```
 
+## Statistical trend summary per month
+We fit linear models and perform Mann-Kendall tests on monthly mean Heat Index to formally identify which months show significant long-term warming or cooling.
 ```{r}
-library(broom)      # برای تمیز کردن خروجی مدل
-library(trend)      # برای Mann-Kendall (اگر نصب نیست: install.packages("trend"))
-library(Kendall) 
-
-# تابع برای تحلیل یک ماه
 analyze_trend <- function(df_month) {
-  if (nrow(df_month) < 3) return(tibble(month = unique(df_month$month), note = "کمتر از ۳ سال داده"))
   
+  # Early exit if too few years → regression not meaningful
+  if (nrow(df_month) < 3) {
+    return(tibble(
+      month = unique(df_month$month),
+      note  = "Fewer than 3 years of data"
+    ))
+  }
+  
+  # Linear model: temperature ~ year
   model <- lm(mean_heat_index ~ year, data = df_month)
   
   slope     <- coef(model)[2]
   p_value   <- glance(model)$p.value
   r_squared <- glance(model)$r.squared
-  years_span <- max(df_month$year) - min(df_month$year) + 1
-  change_total <- slope * (years_span - 1)   # تغییر تقریبی کل دوره
+  years     <- max(df_month$year) - min(df_month$year) + 1
+  total_change <- slope * (years - 1)
   
+  # Non-parametric trend test
   mk_test <- MannKendall(df_month$mean_heat_index)
   
+  # Decide trend category using both parametric (lm) and non-parametric (MK) results
   trend_type <- case_when(
-    p_value > 0.05 & mk_test$sl > 0.05 ~ "بدون روند معنادار",
-    slope > 0 & mk_test$sl <= 0.05     ~ "صعودی معنادار",
-    slope < 0 & mk_test$sl <= 0.05     ~ "نزولی معنادار",
-    TRUE                               ~ "روند ضعیف یا نوسانی"
+    p_value > 0.05 & mk_test$sl > 0.05   ~ "No significant trend",
+    slope > 0   & mk_test$sl <= 0.05     ~ "Significant increasing trend",
+    slope < 0   & mk_test$sl <= 0.05     ~ "Significant decreasing trend",
+    TRUE                                 ~ "Weak or oscillating trend"
   )
   
+  # Return summary row
   tibble(
     month          = unique(df_month$month),
     slope_per_year = round(slope, 4),
-    total_change   = round(change_total, 2),
+    total_change   = round(total_change, 2),
     lm_p           = round(p_value, 4),
     mk_p           = round(mk_test$sl, 4),
     mk_tau         = round(mk_test$tau, 3),
@@ -427,16 +485,9 @@ The pronounced warming in November raises questions about other possible impacts
 However, long-term trends are not necessarily stable; recent years or short-term fluctuations may currently dominate actual water demand and other outcomes. Therefore, any planning or further hypothesis testing should also incorporate the most recent data available.
 
 
-
-4. چه ماه های سال بیشترین روزهای به شدت سرد یا به شدت گرم رو داشتند؟
-
+## Extreme temperature days by month (hot vs cold)
+We identify days with extreme heat or cold (defined earlier using 30-day rolling mean ± 2 SD) and count how many such days occurred in each month across all years.
 ```{r}
-library(dplyr)
-library(ggplot2)
-library(lubridate)
-library(tidyr)   # برای pivot_longer
-
-# فقط روزهای شدید دما (گرم یا سرد)
 extreme_temperature_days <- my_data %>% 
   filter(is_extreme_hot == TRUE | is_extreme_cold == TRUE)
 
@@ -446,96 +497,87 @@ result_wide <- extreme_temperature_days %>%
   ) %>%
   group_by(month_name) %>%
   summarise(
-    Very_Hot  = sum(is_extreme_hot,  na.rm = TRUE),
-    Very_Cold = sum(is_extreme_cold, na.rm = TRUE),
+    very_hot  = sum(is_extreme_hot,  na.rm = TRUE),
+    very_cold = sum(is_extreme_cold, na.rm = TRUE),
     .groups = "drop"
   ) %>%
   mutate(
     month_name = factor(month_name, levels = month.name)
   )
 
-# 2. تبدیل به long format
-result_long <- result_wide %>%
-  pivot_longer(
-    cols = c(Very_Hot, Very_Cold),
-    names_to = "Temperature_Type",
-    values_to = "Count"
-  )
+  result_long <- result_wide %>%
+    pivot_longer(
+      cols = c(very_hot, very_cold),
+      names_to = "temperature_type",
+      values_to = "count"
+    )
 
-# 3. نمودار نهایی – ستون‌ها کاملاً کنار هم بدون فاصله
-ggplot(result_long, aes(x = month_name, y = Count, fill = Temperature_Type)) +
+ggplot(result_long, aes(x = month_name, y = count, fill = temperature_type)) +
   
-  geom_col(
-    position = "Dodge",  # کنار هم، بدون فاصله اضافی
-    width = 0.45,                                                 # عرض هر ستون
-    color = "black",
-    linewidth = 0.3
-  ) +
+  geom_col(position = position_dodge(width = 0.35), width = 0.35) +
   
-  # اضافه کردن عدد بالای هر ستون
   geom_text(
     aes(
-      label = Count,                           # یا sprintf("%.0f", Count) برای بدون اعشار
-      y = Count
+      label = count,
+      y = count
     ),
-    position = position_dodge(width = 0.70),   # هم‌جهت با ستون‌ها
-    vjust = -0.4,                              # کمی بالاتر از بالای ستون
+    position = position_dodge(width = 0.70),
+    vjust = -0.4,
     size = 3.4,
     fontface = "bold",
     color = "black"
   ) +
-  
+
   scale_fill_manual(
-    values = c("Very_Hot"  = "#d73027",    # قرمز برای Very Hot
-               "Very_Cold" = "#4575b4"),   # آبی برای Very Cold
-    name   = "Extreme Type",
-    labels = c("Very Hot", "Very Cold")
+    values = c("very_hot"   = "#d73027", 
+               "very_cold" = "#4575b4"),
+    labels = c("very_hot"   = "Very Hot", 
+               "very_cold" = "Very Cold")
   ) +
   
   scale_x_discrete(name = "Month") +
   
   labs(
-    y       = "Number of Days",
-    title   = "Number of Extreme Hot and Cold Days by Month",
-    subtitle = "Only days with extreme temperatures (no year separation)"
+    y = "Number of Days",
+    title = "Number of Extreme Hot and Cold Days by Month",
+    subtitle = "Only days with extreme temperatures (no year separation)",
+    fill = NULL
   ) +
   
-  theme_minimal(base_size = 13) +
-  theme(
-    axis.text.x      = element_text(angle = 35, hjust = 1, size = 10),
-    legend.position  = "top",
-    legend.direction = "horizontal",
-    legend.title     = element_text(face = "bold"),
-    panel.grid.major.x = element_blank(),
-    plot.title       = element_text(hjust = 0.5, face = "bold"),
-    plot.subtitle    = element_text(hjust = 0.5)
-  )
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-
 Analysis of daily mean air temperature shows that August had the highest number of extreme days (54 days: 8 very hot + 46 very cold), followed by October (43 days, mostly very cold) and November (40 days, all very cold). Very hot days were most frequent in June (23 days) and March (22 days).
 February stands out with 20 extreme days out of ~28–29 days (~69–71% of the month), consisting of 10 very hot and 10 very cold days. Since February largely overlaps with the Persian month of Bahman, the frequent and sharp temperature fluctuations during this period may contribute to higher rates of common colds and respiratory infections in Birjand, as repeated exposure to extreme cold and rapid temperature variability can impair nasal mucociliary clearance and local immune response, increasing susceptibility to viral infections (as supported by studies showing that cold exposure and temperature variability impair nasal mucociliary clearance and local immune response; e.g., Eccles, 2002; Mourtzoukou & Falagas, 2007).
 
 
+## ??
+To identify cities with the highest temperature extremes during Ramadan, we calculated two key metrics:
 
-2. کدام شهرها بیشترین نوسان دمایی را در ماه رمضان دارند؟
+- **Percentage of extreme temperature days within Ramadan**  
+  (Number of extreme days during Ramadan ÷ Total number of Ramadan days across the period)  
+  This ratio shows how frequently extreme conditions (very hot or very cold) occurred during Ramadan. It is a fair metric for comparing cities, as the number of Ramadan days is roughly consistent each year.
+
+- **Year-by-year comparison of extreme days**  
+  A bar chart compares the total number of extreme days in each full year against the number of extreme days occurring only during Ramadan in the same year. This helps visualize whether Ramadan periods contributed disproportionately to annual extremes in specific years.
+
+#### Calculate percentage of extreme days during Ramadan (full period)
+This code computes the overall proportion of Ramadan days that were classified as extreme.
+
 ```{r}
-extreme_temperature_ramadan_days <- my_data %>% 
+extreme_temperature_ramadan_days <- my_data %>%
   filter(is_ramadan == TRUE & (is_extreme_hot == TRUE | is_extreme_cold == TRUE))
 
 ramadan_days_total <- my_data %>% filter(is_ramadan == TRUE)
+
 ramadan_extreme_ratio <- nrow(extreme_temperature_ramadan_days) / nrow(ramadan_days_total)
 
-print(ramadan_extreme_ratio)
-
+print(paste("Percentage of extreme days during Ramadan:", round(ramadan_extreme_ratio * 100, 1), "%"))
 ```
 
-
-
+## Year-by-year comparison: Extreme days in Ramadan vs. full year
+This bar chart shows, for each year, the total number of extreme temperature days in the entire year versus the subset that occurred during Ramadan. It highlights years in which Ramadan had an unusually high share of extremes.
 ```{r}
-library(ggplot2)
-library(dplyr)
-
-# اول داده سال به سال آماده کن
 yearly_summary <- my_data %>%
   mutate(year = year(full_date)) %>%
   group_by(year) %>%
@@ -546,31 +588,31 @@ yearly_summary <- my_data %>%
   ) %>%
   pivot_longer(cols = c(total_extreme, ramadan_extreme),
                names_to = "type",
-               values_to = "Count")
+               values_to = "count")
 
-# نمودار
-ggplot(yearly_summary, aes(x = as.factor(year), y = Count, fill = type)) +
+ggplot(yearly_summary, aes(x = as.factor(year), y = count, fill = type)) +
   geom_col(position = position_dodge(width = 0.35), width = 0.35) +
-  
-  
   geom_text(
     aes(
-      label = Count,                           # یا sprintf("%.0f", Count) برای بدون اعشار
-      y = Count
+      label = count,
+      y = count
     ),
-    position = position_dodge(width = 0.70),   # هم‌جهت با ستون‌ها
-    vjust = -0.4,                              # کمی بالاتر از بالای ستون
+    position = position_dodge(width = 0.70),
+    vjust = -0.4,
     size = 3.4,
     fontface = "bold",
     color = "black"
   ) +
-  
-  scale_fill_manual(values = c("total_extreme" = "#999999", "ramadan_extreme" = "#d73027"),
-                    labels = c("کل سال", "رمضان")) +
+  scale_fill_manual(
+    values = c("total_extreme"   = "#999999", 
+               "ramadan_extreme" = "#d73027"),
+    labels = c("total_extreme"   = "Full Year", 
+               "ramadan_extreme" = "Ramadan")
+  ) +
   labs(
-    x = "سال",
-    y = "تعداد روزهای با دمای شدید",
-    title = "تعداد روزهای شدید دمایی در رمضان در مقایسه با کل سال",
+    x = "Year",
+    y = "Number of Extreme Temperature Days",
+    title = "Extreme Temperature Days in Ramadan vs. Full Year",
     fill = NULL
   ) +
   theme_minimal() +
