@@ -1,0 +1,582 @@
+---
+title: "Visualization"
+output:
+  html_document:
+    df_print: paged
+---
+
+This document serves as the **main exploratory visualization file** for dataset (daily records from 2013 to 2025). The primary goal is to **discover patterns, trends, anomalies, and potential relationships** in the data through various visualization techniques and statistical summaries.
+
+Different plotting methods, smoothing techniques, comparative overlays (especially highlighting Ramadan periods), rolling statistics, trend analysis, extreme event detection, and hypothesis-driven comparisons are used to uncover possible seasonal behaviors, long-term changes, and month-specific phenomena.
+
+All visualizations and summaries are **exploratory** — they aim to reveal insights rather than test formal hypotheses (although some informal hypotheses are discussed).
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library("tidyverse")
+library("lubridate")
+
+```
+
+## Loading the cleaned dataset
+The cleaned dataset is loaded from CSV. This file contains daily weather variables including temperature, humidity, wind speed, heat index, VPD, etc.
+```{r echo=TRUE, message=FALSE}
+my_data <- readr::read_csv('D:/climetr/climetr_analysis/datasets/birjand_clean_dataset.csv')
+```
+
+## Long-term temperature overview (2013–2025)
+This line + smooth plot shows the overall temperature behavior across the entire period, helping to visually identify any long-term warming or seasonal patterns.
+```{r, fig.width=12, fig.height=6}
+my_data %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = temp_air_mean_c), 
+            linewidth = 0.2, color = "grey60") +
+  geom_smooth(aes(x = full_date, y = temp_air_mean_c),
+              method = "loess",
+              span = 0.4,
+              se = FALSE,
+              color = "red", 
+              linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 year", 
+    date_labels = "%Y",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = "Mean Daily Temperature – Birjand (2013–2025)",
+       x = "Year", y = "Temperature (C°)") +
+  theme_minimal()
+```
+
+## Yearly temperature with Ramadan highlight (selected year)
+We repeat the same visualization approach for humidity, wind speed, dew point, daily temperature range, VPD, Heat Index, and Thermal Discomfort Delta — all for a representative year (2024) with a loess smoothing overlay. The Ramadan period is highlighted in red purely for visual reference, allowing easy inspection of seasonal patterns and overall annual behavior across multiple variables.
+```{r}
+selected_year <- 2024
+
+my_data %>% filter(year == selected_year) %>% ggplot() +
+  geom_line(mapping = aes(x=full_date, y=temp_air_mean_c)) +
+  geom_line(data = filter(my_data, year == selected_year & is_ramadan == TRUE), mapping = aes(x=full_date, y=temp_air_mean_c), color="red") +
+    geom_smooth(aes(x = full_date, y = temp_air_mean_c),
+              method = "loess",
+              span = 0.4,
+              se = FALSE,
+              color = "gray50", 
+              linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("Daily Mean Temperature –", selected_year),
+       subtitle = "Red segment = Ramadan period", x = "Month", y = "Temperature (C°)")
+```
+
+
+## Same style comparison for other variables in the selected year
+We repeat the same visualization approach for humidity, wind speed, dew point, daily temperature range, VPD, Heat Index, and Thermal Discomfort Delta — all with Ramadan highlighted in red. This helps quickly scan whether Ramadan periods show distinct behavior in any of these variables.
+```{r}
+selected_year <- 2024
+
+# Humidity
+my_data %>% filter(year == selected_year) %>% ggplot() +
+  geom_line(mapping = aes(x=full_date, y=humidity_relative_percent)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), mapping = aes(x=full_date, y=humidity_relative_percent), color="red") +
+  geom_smooth(aes(x = full_date, y = humidity_relative_percent),
+          method = "loess",
+          span = 0.4,
+          se = FALSE,
+          color = "gray50", 
+          linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("Relative Humidity –", selected_year),
+       subtitle = "Red segment = Ramadan period", x = "Month", y = "Humidity")
+
+# Wind speed
+my_data %>% filter(year == selected_year) %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = wind_speed_ms)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), 
+            aes(x = full_date, y = wind_speed_ms), color = "red") +
+    geom_smooth(aes(x = full_date, y = wind_speed_ms),
+          method = "loess",
+          span = 0.4,
+          se = FALSE,
+          color = "gray50", 
+          linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("Wind Speed –", selected_year), subtitle = "Red segment = Ramadan period", x = "Month", y = "Wind Speed(m/s)")
+
+
+# Dew point
+my_data %>% filter(year == selected_year) %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = temp_dewpoint_c)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), 
+            aes(x = full_date, y = temp_dewpoint_c), color = "red") +
+  geom_smooth(aes(x = full_date, y = temp_dewpoint_c),
+          method = "loess",
+          span = 0.4,
+          se = FALSE,
+          color = "gray50", 
+          linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("Dew Point Temperature -", selected_year), subtitle = "Red segment = Ramadan period", x = "Month", y = "Dew Point Temperature")
+
+
+# Daily temperature range
+my_data %>% filter(year == selected_year) %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = temp_range)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), 
+            aes(x = full_date, y = temp_range), color = "red") +
+  geom_smooth(aes(x = full_date, y = temp_range),
+          method = "loess",
+          span = 0.4,
+          se = FALSE,
+          color = "gray50", 
+          linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("Daily Temperature Range –", selected_year), subtitle = "Red segment = Ramadan period", x = "Month", y = "Diurnal Temperature Variation")
+
+# Vapor Pressure Deficit
+my_data %>% filter(year == selected_year) %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = vpd_kpa)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), 
+            aes(x = full_date, y = vpd_kpa), color = "red") +
+  geom_smooth(aes(x = full_date, y = vpd_kpa),
+          method = "loess",
+          span = 0.4,
+          se = FALSE,
+          color = "gray50", 
+          linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("Vapor Pressure Deficit –", selected_year), subtitle = "Red segment = Ramadan period", x = "Month", y = "Vapor Pressure Deficit")
+
+
+# Standard Heat Index
+my_data %>% filter(year == selected_year) %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = HI_standard)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), 
+            aes(x = full_date, y = HI_standard), color = "red") +
+  geom_smooth(aes(x = full_date, y = HI_standard),
+          method = "loess",
+          span = 0.4,
+          se = FALSE,
+          color = "gray50", 
+          linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("Heat Index (Standard) –", selected_year), subtitle = "Red segment = Ramadan period", x = "Month", y = "Heat Index")
+
+
+# Thermal Discomfort Delta
+my_data %>% filter(year == selected_year) %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = heat_index_rel_temp)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), 
+            aes(x = full_date, y = heat_index_rel_temp), color = "red") +
+  geom_smooth(aes(x = full_date, y = heat_index_rel_temp),
+          method = "loess",
+          span = 0.4,
+          se = FALSE,
+          color = "gray50", 
+          linewidth = 1.1) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("Thermal Discomfort Delta –", selected_year), subtitle = "Red segment = Ramadan period", x = "Month", y = "Thermal Discomfort Delta")
+
+
+
+# 30-day rolling average
+my_data %>% filter(year == selected_year) %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = rolling_avg_30)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), 
+            aes(x = full_date, y = rolling_avg_30), color = "red") +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("30-day rolling average –", selected_year), subtitle = "Red segment = Ramadan period", x = "Month", y = "30-day rolling average")
+
+
+# 7-day rolling average
+my_data %>% filter(year == selected_year) %>% 
+  ggplot() +
+  geom_line(aes(x = full_date, y = rolling_avg_7)) +
+  geom_line(data = . %>% filter(is_ramadan == TRUE), 
+            aes(x = full_date, y = rolling_avg_7), color = "red") +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b",
+    expand = c(0.01, 0.01)
+  ) +
+  labs(title = paste("7-day rolling average –", selected_year), subtitle = "Red segment = Ramadan period", x = "Month", y = "7-day rolling average")
+
+```
+
+
+This plot overlays loess-smoothed daily mean temperature curves for the last five years (2021–2025), allowing direct visual comparison of seasonal patterns and inter-annual differences.
+```{r, fig.width=12, fig.height=6}
+my_colors <- c(
+  "2021" = "#1f77b4",
+  "2022" = "#ff7f0e",
+  "2023" = "#2ca02c",
+  "2024" = "#d62728",
+  "2025" = "#9467bd"
+)
+
+start_year <- 2021
+end_year   <- 2025
+
+p <- ggplot() +
+  
+  lapply(start_year:end_year, function(yr) {
+    geom_smooth(
+      data = filter(my_data, year == yr),
+      aes(x    = day_of_year,
+          y    = temp_air_mean_c,
+          color = factor(yr, levels = start_year:end_year)),   # ← مهم
+      method   = "loess",
+      span     = 0.4,
+      se       = FALSE,
+      linewidth = 0.6,
+      show.legend = TRUE
+    )
+  }) +
+  
+  scale_color_manual(
+    values = my_colors,
+    name   = "Year",
+    labels = as.character(start_year:end_year)
+  ) +
+  
+  scale_x_continuous(
+    breaks = seq(0, 366, by = 30),
+    limits = c(1, 366),
+    expand = expansion(mult = c(0.01, 0.01))
+  ) +
+  
+  labs(
+    title    = paste0("Loess Smoothed Daily Mean Temperature (", start_year, "–", end_year, ")"),
+    x        = "Day of Year",
+    y        = "Temperature (C°)",
+    color    = "Year"
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position       = c(0.98, 0.98),
+    legend.justification  = c("right", "top"),
+    legend.background     = element_rect(fill = "white", color = "gray80", linewidth = 0.4),
+    legend.title          = element_text(face = "bold"),
+    legend.text           = element_text(size = 9),
+    panel.grid.minor.x    = element_blank(),
+    plot.title.position   = "plot"
+  )
+
+print(p)
+```
+
+
+
+5. تفاوت میانگین دمای ماه های سال در سال های مختلف
+now i want to plot each month period compared to past
+```{r}
+data <- tibble()
+plots <- c()
+all_years <- levels(as.factor(my_data$year))
+
+for (month in 1:12) {
+  temp_data <- tibble()
+  for (year in all_years) {
+    start_date <- ymd(paste0(year, "-", month, "-", "01"))
+    end_date <- ceiling_date(start_date, "month") - days(1)
+    
+    period <- my_data %>% filter(full_date >= start_date & full_date <= end_date)
+    
+    mean_temperature <- mean(period$temp_air_mean_c, na.rm = TRUE) 
+    mean_heat_index <- mean(period$HI_standard, na.rm = TRUE)
+    
+    temp_data <- rbind(temp_data, tibble(year=year(start_date), month=month(start_date), mean_temperature=mean_temperature, mean_heat_index=mean_heat_index))
+  }
+  
+  # the_plot = temp_data %>% ggplot() +
+  #   geom_line(mapping = aes(x=year, y=mean_temperature)) +
+  #   labs(title=paste0("Compare temperature of each month with past"), subtitle = paste0("Comparing ", month(paste0(year, "-", month, "-", "01"), label = T, abbr = F), " from ", all_years[1], " to ", all_years[length(all_years)])) 
+  # plots <- c(plots, the_plot)
+
+  the_plot = temp_data %>% ggplot() +
+geom_line(aes(x = year, y = mean_heat_index), color = "grey70", linewidth = 0.6) +   # خط اصلی نقاط
+geom_smooth(
+  aes(x = year, y = mean_heat_index),
+  method = "lm",               # ← مهم‌ترین تغییر
+  se = FALSE,                  # بدون بازه اطمینان (اگر نمی‌خواهی شلوغ بشه)
+  color = "red", linewidth = 1.3, linetype = "solid"
+) +
+geom_point(aes(x = year, y = mean_heat_index), color = "darkblue", size = 2.2) +
+    labs(x="Year", title=paste0("Compare heat index of each month with past"), subtitle = paste0("Comparing ", month(paste0(year, "-", month, "-", "01"), label = T, abbr = F), " from ", all_years[1], " to ", all_years[length(all_years)])) +
+    scale_x_continuous(
+    breaks = seq(min(temp_data$year), max(temp_data$year), by = 1),  # هر سال یک تیک
+    labels = function(x) floor(x)   # یا as.integer(x) یا round(x, 0)
+  ) +
+geom_text(
+  aes(
+    x = year,
+    y = mean_heat_index,
+    label = sprintf("%.2f", mean_heat_index),
+    color = mean_heat_index > mean(mean_heat_index, na.rm = TRUE)
+  ),
+  vjust = -0.6,
+  size = 3.5
+) +
+scale_color_manual(values = c("blue", "red"), guide = "none")
+  plots <- c(plots, the_plot)
+  
+  data <- rbind(data, temp_data)
+}
+plots
+```
+
+```{r}
+library(broom)      # برای تمیز کردن خروجی مدل
+library(trend)      # برای Mann-Kendall (اگر نصب نیست: install.packages("trend"))
+library(Kendall) 
+
+# تابع برای تحلیل یک ماه
+analyze_trend <- function(df_month) {
+  if (nrow(df_month) < 3) return(tibble(month = unique(df_month$month), note = "کمتر از ۳ سال داده"))
+  
+  model <- lm(mean_heat_index ~ year, data = df_month)
+  
+  slope     <- coef(model)[2]
+  p_value   <- glance(model)$p.value
+  r_squared <- glance(model)$r.squared
+  years_span <- max(df_month$year) - min(df_month$year) + 1
+  change_total <- slope * (years_span - 1)   # تغییر تقریبی کل دوره
+  
+  mk_test <- MannKendall(df_month$mean_heat_index)
+  
+  trend_type <- case_when(
+    p_value > 0.05 & mk_test$sl > 0.05 ~ "بدون روند معنادار",
+    slope > 0 & mk_test$sl <= 0.05     ~ "صعودی معنادار",
+    slope < 0 & mk_test$sl <= 0.05     ~ "نزولی معنادار",
+    TRUE                               ~ "روند ضعیف یا نوسانی"
+  )
+  
+  tibble(
+    month          = unique(df_month$month),
+    slope_per_year = round(slope, 4),
+    total_change   = round(change_total, 2),
+    lm_p           = round(p_value, 4),
+    mk_p           = round(mk_test$sl, 4),
+    mk_tau         = round(mk_test$tau, 3),
+    trend          = trend_type
+  )
+}
+
+# اجرا
+trend_summary <- data %>%
+  group_by(month) %>%
+  group_split() %>%
+  map_dfr(analyze_trend) %>%
+  arrange(month)
+
+print(trend_summary)
+```
+Statistically significant increasing trends were observed in two months:
+
+July: +0.15 °C per year (total change ≈ +1.81 °C, p ≈ 0.008–0.024)
+November: +0.30 °C per year (total change ≈ +3.54 °C, p ≈ 0.010–0.024)
+
+No significant upward or downward trend was detected in the remaining ten months (p > 0.05 in both linear regression and Mann-Kendall tests).
+These warming trends — especially the stronger one in November — allow for additional hypotheses to be explored. For example:
+
+The upward temperature trend in July may have influenced urban water consumption patterns (e.g. higher demand for cooling, drinking, and irrigation). Analyzing historical water consumption and reservoir level data for July could help quantify this potential relationship and improve seasonal water planning in Birjand.
+The pronounced warming in November raises questions about other possible impacts, such as changes in agricultural water needs, energy demand for heating/cooling, frost risk patterns, or even public health effects related to temperature variability.
+
+However, long-term trends are not necessarily stable; recent years or short-term fluctuations may currently dominate actual water demand and other outcomes. Therefore, any planning or further hypothesis testing should also incorporate the most recent data available.
+
+
+
+4. چه ماه های سال بیشترین روزهای به شدت سرد یا به شدت گرم رو داشتند؟
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(tidyr)   # برای pivot_longer
+
+# فقط روزهای شدید دما (گرم یا سرد)
+extreme_temperature_days <- my_data %>% 
+  filter(is_extreme_hot == TRUE | is_extreme_cold == TRUE)
+
+result_wide <- extreme_temperature_days %>%
+  mutate(
+    month_name = month(full_date, label = TRUE, abbr = FALSE)
+  ) %>%
+  group_by(month_name) %>%
+  summarise(
+    Very_Hot  = sum(is_extreme_hot,  na.rm = TRUE),
+    Very_Cold = sum(is_extreme_cold, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    month_name = factor(month_name, levels = month.name)
+  )
+
+# 2. تبدیل به long format
+result_long <- result_wide %>%
+  pivot_longer(
+    cols = c(Very_Hot, Very_Cold),
+    names_to = "Temperature_Type",
+    values_to = "Count"
+  )
+
+# 3. نمودار نهایی – ستون‌ها کاملاً کنار هم بدون فاصله
+ggplot(result_long, aes(x = month_name, y = Count, fill = Temperature_Type)) +
+  
+  geom_col(
+    position = "Dodge",  # کنار هم، بدون فاصله اضافی
+    width = 0.45,                                                 # عرض هر ستون
+    color = "black",
+    linewidth = 0.3
+  ) +
+  
+  # اضافه کردن عدد بالای هر ستون
+  geom_text(
+    aes(
+      label = Count,                           # یا sprintf("%.0f", Count) برای بدون اعشار
+      y = Count
+    ),
+    position = position_dodge(width = 0.70),   # هم‌جهت با ستون‌ها
+    vjust = -0.4,                              # کمی بالاتر از بالای ستون
+    size = 3.4,
+    fontface = "bold",
+    color = "black"
+  ) +
+  
+  scale_fill_manual(
+    values = c("Very_Hot"  = "#d73027",    # قرمز برای Very Hot
+               "Very_Cold" = "#4575b4"),   # آبی برای Very Cold
+    name   = "Extreme Type",
+    labels = c("Very Hot", "Very Cold")
+  ) +
+  
+  scale_x_discrete(name = "Month") +
+  
+  labs(
+    y       = "Number of Days",
+    title   = "Number of Extreme Hot and Cold Days by Month",
+    subtitle = "Only days with extreme temperatures (no year separation)"
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x      = element_text(angle = 35, hjust = 1, size = 10),
+    legend.position  = "top",
+    legend.direction = "horizontal",
+    legend.title     = element_text(face = "bold"),
+    panel.grid.major.x = element_blank(),
+    plot.title       = element_text(hjust = 0.5, face = "bold"),
+    plot.subtitle    = element_text(hjust = 0.5)
+  )
+```
+
+Analysis of daily mean air temperature shows that August had the highest number of extreme days (54 days: 8 very hot + 46 very cold), followed by October (43 days, mostly very cold) and November (40 days, all very cold). Very hot days were most frequent in June (23 days) and March (22 days).
+February stands out with 20 extreme days out of ~28–29 days (~69–71% of the month), consisting of 10 very hot and 10 very cold days. Since February largely overlaps with the Persian month of Bahman, the frequent and sharp temperature fluctuations during this period may contribute to higher rates of common colds and respiratory infections in Birjand, as repeated exposure to extreme cold and rapid temperature variability can impair nasal mucociliary clearance and local immune response, increasing susceptibility to viral infections (as supported by studies showing that cold exposure and temperature variability impair nasal mucociliary clearance and local immune response; e.g., Eccles, 2002; Mourtzoukou & Falagas, 2007).
+
+
+
+2. کدام شهرها بیشترین نوسان دمایی را در ماه رمضان دارند؟
+```{r}
+extreme_temperature_ramadan_days <- my_data %>% 
+  filter(is_ramadan == TRUE & (is_extreme_hot == TRUE | is_extreme_cold == TRUE))
+
+ramadan_days_total <- my_data %>% filter(is_ramadan == TRUE)
+ramadan_extreme_ratio <- nrow(extreme_temperature_ramadan_days) / nrow(ramadan_days_total)
+
+print(ramadan_extreme_ratio)
+
+```
+
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# اول داده سال به سال آماده کن
+yearly_summary <- my_data %>%
+  mutate(year = year(full_date)) %>%
+  group_by(year) %>%
+  summarise(
+    total_extreme = sum(is_extreme_hot | is_extreme_cold, na.rm = TRUE),
+    ramadan_extreme = sum((is_extreme_hot | is_extreme_cold) & is_ramadan, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(cols = c(total_extreme, ramadan_extreme),
+               names_to = "type",
+               values_to = "Count")
+
+# نمودار
+ggplot(yearly_summary, aes(x = as.factor(year), y = Count, fill = type)) +
+  geom_col(position = position_dodge(width = 0.35), width = 0.35) +
+  
+  
+  geom_text(
+    aes(
+      label = Count,                           # یا sprintf("%.0f", Count) برای بدون اعشار
+      y = Count
+    ),
+    position = position_dodge(width = 0.70),   # هم‌جهت با ستون‌ها
+    vjust = -0.4,                              # کمی بالاتر از بالای ستون
+    size = 3.4,
+    fontface = "bold",
+    color = "black"
+  ) +
+  
+  scale_fill_manual(values = c("total_extreme" = "#999999", "ramadan_extreme" = "#d73027"),
+                    labels = c("کل سال", "رمضان")) +
+  labs(
+    x = "سال",
+    y = "تعداد روزهای با دمای شدید",
+    title = "تعداد روزهای شدید دمایی در رمضان در مقایسه با کل سال",
+    fill = NULL
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+
+

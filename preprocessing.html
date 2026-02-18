@@ -2336,8 +2336,9 @@ making it feel warmer than the actual thermometer reading (potential
 heat stress).</p>
 <p><strong>Zero (0)</strong>: Indicates that humidity has no added
 effect on perceived temperature, often occurring in cool weather or at a
-neutral humidity balance. Negative Values (&lt; 0): Occur in extremely
-dry conditions where rapid evaporation can lead to a cooling sensation,
+neutral humidity balance.</p>
+<p><strong>Negative Values</strong> (&lt; 0): Occur in extremely dry
+conditions where rapid evaporation can lead to a cooling sensation,
 making the air feel slightly cooler than its actual temperature.</p>
 <pre class="r"><code>my_data &lt;- my_data %&gt;%
   mutate(heat_index_rel_temp = HI_standard - temp_air_mean_c)</code></pre>

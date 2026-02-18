@@ -211,7 +211,8 @@ my_data <- my_data %>%
 **Positive Values (> 0)**: Indicate that humidity is hindering the body's ability to cool itself through sweat evaporation, making it feel warmer than the actual thermometer reading (potential heat stress).
 
 **Zero (0)**: Indicates that humidity has no added effect on perceived temperature, often occurring in cool weather or at a neutral humidity balance.
-Negative Values (< 0): Occur in extremely dry conditions where rapid evaporation can lead to a cooling sensation, making the air feel slightly cooler than its actual temperature.
+
+**Negative Values** (< 0): Occur in extremely dry conditions where rapid evaporation can lead to a cooling sensation, making the air feel slightly cooler than its actual temperature.
 ```{r}
 my_data <- my_data %>%
   mutate(heat_index_rel_temp = HI_standard - temp_air_mean_c)
