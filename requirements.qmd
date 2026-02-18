@@ -94,90 +94,96 @@ chatgpt پیشنهاد میده شاخص های زیر رو هم جمع آوری
 
 ### منابع مورد نظر
 
-**IRIMO** (ایستگاه‌های ایران), فعلا به دلیل عدم دسترسی به داده ها این منبع کنسله.
+**IRIMO** (ایستگاه‌های ایران), فعلا به دلیل عدم دسترسی به داده ها این
+منبع کنسله.
 
-**NASA POWER**
-از همین داده های استفاده میکنم.
-داده ها رو با آدرس زیر به صورت فایل csv گرفتم.
+**NASA POWER** از همین داده های استفاده میکنم. داده ها رو با آدرس زیر به
+صورت فایل csv گرفتم.
 
-[لینک دانلود داده های بیرجند](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=32.86&longitude=59.22&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+بیرجند](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=32.86&longitude=59.22&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های تبریز](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=38.08&longitude=46.29&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+تبریز](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=38.08&longitude=46.29&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های اصفهان](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=32.65&longitude=51.68&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+اصفهان](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=32.65&longitude=51.68&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های رشت](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=37.28&longitude=49.58&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+رشت](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=37.28&longitude=49.58&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های بندرعباس](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=27.19&longitude=56.27&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+بندرعباس](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=27.19&longitude=56.27&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های قاهره](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=30.04&longitude=31.23&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+قاهره](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=30.04&longitude=31.23&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های آنکارا](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=39.93&longitude=32.85&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+آنکارا](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=39.93&longitude=32.85&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های اسلو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=59.91&longitude=10.75&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+اسلو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=59.91&longitude=10.75&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های دبی](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=25.27&longitude=55.30&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+دبی](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=25.27&longitude=55.30&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
+[لینک دانلود داده های اسوالبارد،
+نروژ](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=78.2232&longitude=15.6466&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های اسوالبارد، نروژ](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=78.2232&longitude=15.6466&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+مسکو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=55.7558&longitude=37.6173&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های مسکو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=55.7558&longitude=37.6173&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+بارسلون](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=41.3851&longitude=2.1734&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
+[لینک دانلود داده های
+سنگاپور](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=1.3521&longitude=103.8198&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های بارسلون](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=41.3851&longitude=2.1734&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+ریاض](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=24.7136&longitude=46.6753&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
+[لینک دانلود داده های مکزیکو
+سیتی](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=19.4326&longitude=-99.1332&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های سنگاپور](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=1.3521&longitude=103.8198&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+لندن](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=51.5074&longitude=-0.1278&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های ریاض](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=24.7136&longitude=46.6753&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
+[لینک دانلود داده های
+آدلاید](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=-34.9285&longitude=138.6007&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
+[لینک دانلود داده های
+ریودوژانیرو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=-22.9068&longitude=-43.1729&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
-[لینک دانلود داده های مکزیکو سیتی](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=19.4326&longitude=-99.1332&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
-
-
-
-[لینک دانلود داده های لندن](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=51.5074&longitude=-0.1278&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
-
-
-[لینک دانلود داده های آدلاید](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=-34.9285&longitude=138.6007&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
-
-
-[لینک دانلود داده های ریودوژانیرو](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=-22.9068&longitude=-43.1729&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
-
-
-
-[لینک دانلود داده های نوادا](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=39.5296&longitude=-119.8138&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
-
+[لینک دانلود داده های
+نوادا](https://power.larc.nasa.gov/api/temporal/daily/point?start=20130101&end=20251231&latitude=39.5296&longitude=-119.8138&community=AG&parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,WD2M,PRECTOTCORR,PS,ALLSKY_SFC_SW_DWN,T2MDEW,T2MWET,QV2M&format=csv&time-standard=lst&units=metric&header=true)
 
 :پاامترهایی که بهم داد
 
-T2M                   MERRA-2 Temperature at 2 Meters (C) 
+T2M MERRA-2 Temperature at 2 Meters (C)
 
-T2M_MAX               MERRA-2 Temperature at 2 Meters Maximum (C) 
+T2M_MAX MERRA-2 Temperature at 2 Meters Maximum (C)
 
-T2M_MIN               MERRA-2 Temperature at 2 Meters Minimum (C) 
+T2M_MIN MERRA-2 Temperature at 2 Meters Minimum (C)
 
-RH2M                  MERRA-2 Relative Humidity at 2 Meters (%) 
+RH2M MERRA-2 Relative Humidity at 2 Meters (%)
 
-WS2M                  MERRA-2 Wind Speed at 2 Meters (m/s) 
+WS2M MERRA-2 Wind Speed at 2 Meters (m/s)
 
-WD2M                  MERRA-2 Wind Direction at 2 Meters (Degrees) 
+WD2M MERRA-2 Wind Direction at 2 Meters (Degrees)
 
-PRECTOTCORR           MERRA-2 Precipitation Corrected (mm/day) 
+PRECTOTCORR MERRA-2 Precipitation Corrected (mm/day)
 
-PS                    MERRA-2 Surface Pressure (kPa) 
+PS MERRA-2 Surface Pressure (kPa)
 
-ALLSKY_SFC_SW_DWN     CERES SYN1deg All Sky Surface Shortwave Downward Irradiance (MJ/m^2/day) 
+ALLSKY_SFC_SW_DWN CERES SYN1deg All Sky Surface Shortwave Downward
+Irradiance (MJ/m\^2/day)
 
-T2MDEW                MERRA-2 Dew/Frost Point at 2 Meters (C) 
+T2MDEW MERRA-2 Dew/Frost Point at 2 Meters (C)
 
-T2MWET                MERRA-2 Wet Bulb Temperature at 2 Meters (C) 
+T2MWET MERRA-2 Wet Bulb Temperature at 2 Meters (C)
 
-QV2M                  MERRA-2 Specific Humidity at 2 Meters (g/kg) 
+QV2M MERRA-2 Specific Humidity at 2 Meters (g/kg)
 
-
-
-**Meteostat**
-دیگه بهش نیازی نیست.
+**Meteostat** دیگه بهش نیازی نیست.
 
 ### 
