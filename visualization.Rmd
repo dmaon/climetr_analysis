@@ -311,7 +311,7 @@ print(p)
 ```
 
 ## Comparing end-of-Ramadan rolling average to previous years
-For each year, we take the rolling 30-day average temperature on the last day of Ramadan and compare it to the same day-of-year in all previous years. This helps answer: "Was the temperature at the end of Ramadan in year X unusually warm or cold compared to historical values on the same calendar date?".
+For each year, we take the rolling 30-day average temperature on the last day of Ramadan and compare it to the same day-of-year in all previous years. This helps answer: "Was the temperature at the end of Ramadan in year X unusually warm or cold compared to historical values on the same calendar date?". our last day of Ramadan is pointed with red "x".
 ```{r}
 top_padding <- 0.2
 start_date <- 2014
@@ -478,7 +478,6 @@ November: +0.30 °C per year (total change ≈ +3.54 °C, p ≈ 0.010–0.024)
 
 No significant upward or downward trend was detected in the remaining ten months (p > 0.05 in both linear regression and Mann-Kendall tests).
 These warming trends — especially the stronger one in November — allow for additional hypotheses to be explored. For example:
-
 The upward temperature trend in July may have influenced urban water consumption patterns (e.g. higher demand for cooling, drinking, and irrigation). Analyzing historical water consumption and reservoir level data for July could help quantify this potential relationship and improve seasonal water planning in Birjand.
 The pronounced warming in November raises questions about other possible impacts, such as changes in agricultural water needs, energy demand for heating/cooling, frost risk patterns, or even public health effects related to temperature variability.
 
@@ -547,7 +546,8 @@ ggplot(result_long, aes(x = month_name, y = count, fill = temperature_type)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-Analysis of daily mean air temperature shows that August had the highest number of extreme days (54 days: 8 very hot + 46 very cold), followed by October (43 days, mostly very cold) and November (40 days, all very cold). Very hot days were most frequent in June (23 days) and March (22 days).
+
+Analysis of daily temperature shows that August had the highest number of extreme days (54 days: 8 very hot + 46 very cold), followed by October (43 days, mostly very cold) and November (40 days, all very cold). Very hot days were most frequent in June (23 days) and March (22 days).
 February stands out with 20 extreme days out of ~28–29 days (~69–71% of the month), consisting of 10 very hot and 10 very cold days. Since February largely overlaps with the Persian month of Bahman, the frequent and sharp temperature fluctuations during this period may contribute to higher rates of common colds and respiratory infections in Birjand, as repeated exposure to extreme cold and rapid temperature variability can impair nasal mucociliary clearance and local immune response, increasing susceptibility to viral infections (as supported by studies showing that cold exposure and temperature variability impair nasal mucociliary clearance and local immune response; e.g., Eccles, 2002; Mourtzoukou & Falagas, 2007).
 
 
