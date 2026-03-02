@@ -6,16 +6,14 @@ library("tibble")
 library("zoo")
 library("xts")
 
-
 preprocessing <- function(
-  dataset_path,
-  dataset_export_path,
-  dataset_skip = 20,
-  
+  dataset_file_path,
+  dataset_export_file_path,
+  dataset_skip = 20
 ) {
   # Load dataset
-  my_data <- readr::read_csv(dataset_path, skip = 20)
-  
+  my_data <- readr::read_csv(dataset_file_path, skip = 20)
+
   
   # Mark out-range values to "NA"
   exclude_cols <- c("YEAR", "DOY")
@@ -25,8 +23,8 @@ preprocessing <- function(
 
   
   # Make sure that T2M_MIN <= T2M <= T2M_MAX
-  my_data %>% filter(!(T2M >= T2M_MIN & T2M <= T2M_MAX)) %>% {
-    if (nrow( . > 0))
+  rows <- my_data %>% filter(!(T2M >= T2M_MIN & T2M <= T2M_MAX))
+    if (nrow(rows) > 0) {
       print("Something is wrong.")
     return(FALSE)
   }
@@ -194,7 +192,67 @@ preprocessing <- function(
 
   
   # Save dataset 
-  my_data <- readr::write_csv(my_data, dataset_export_path)
+  my_data <- readr::write_csv(my_data, dataset_export_file_path)
   
   return(TRUE)
 }
+
+
+
+# list of datasets
+datasets_list <- c(
+  "POWER_Point_Daily_20130101_20251123_032d86N_059d22E_LST_Birjand.csv"
+  # "POWER_Point_Daily_20130101_20251125_001d35N_103d82E_LST_Singapore.csv",
+  # "POWER_Point_Daily_20130101_20251125_019d43N_099d13W_LST_Mexico-city.csv",
+  # "POWER_Point_Daily_20130101_20251125_022d91S_043d17W_LST_Rio-de-janeiro.csv",
+  # "POWER_Point_Daily_20130101_20251125_024d71N_046d68E_LST_Riyadh.csv",
+  # "POWER_Point_Daily_20130101_20251125_025d27N_055d30E_LST_Dubai.csv",
+  # "POWER_Point_Daily_20130101_20251125_027d19N_056d27E_LST_Bandar-abbas.csv",
+  # "POWER_Point_Daily_20130101_20251125_030d04N_031d23E_LST_Cairo.csv",
+  # "POWER_Point_Daily_20130101_20251125_032d65N_051d68E_LST_Isfahan.csv",
+  # "POWER_Point_Daily_20130101_20251125_034d93S_138d60E_LST_Adelaide.csv",
+  # "POWER_Point_Daily_20130101_20251125_037d28N_049d58E_LST_Rasht.csv",
+  # "POWER_Point_Daily_20130101_20251125_038d08N_046d29E_LST_Tabriz.csv",
+  # "POWER_Point_Daily_20130101_20251125_039d53N_0119d81W_LST_Nevada.csv",
+  # "POWER_Point_Daily_20130101_20251125_039d93N_032d85E_LST_Ankara.csv",
+  # "POWER_Point_Daily_20130101_20251125_041d39N_002d17E_LST_Barcelona.csv",
+  # "POWER_Point_Daily_20130101_20251125_051d51N_000d13W_LST_London.csv",
+  # "POWER_Point_Daily_20130101_20251125_055d76N_037d62E_LST_Moscow.csv",
+  # "POWER_Point_Daily_20130101_20251125_059d91N_010d75E_LST_Oslo.csv",
+  # "POWER_Point_Daily_20130101_20251125_078d22N_015d65E_LST_Svalbard.csv"
+)
+
+
+
+
+work_directory <- "D:\\climetr\\climetr_analysis\\"
+path <- paste0(work_directory, 'datasets')
+fs::dir_create(path)
+
+for (dataset_path in datasets_list) {
+  file_name <- str_split(dataset_path, "_")[[1]][9]
+  city_name <- tolower(substr(file_name, 0, nchar(file_name) - 4)) # for getting city name
+  
+  preprocessing(
+    dataset_file_path = paste0(path, '\\', dataset_path),
+    dataset_export_file_path = paste0(path, '\\', city_name, "_clean_dataset.csv"),
+    dataset_skip = 20
+  )
+}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
