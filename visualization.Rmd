@@ -462,7 +462,6 @@ analyze_trend <- function(df_month) {
   )
 }
 
-# اجرا
 trend_summary <- data %>%
   group_by(month) %>%
   group_split() %>%
