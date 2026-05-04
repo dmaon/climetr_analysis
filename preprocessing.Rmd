@@ -221,34 +221,27 @@ my_data <- my_data %>%
 **is_ramadan**: Identifies dates within Ramadan using the Kuwaiti Algorithm to analyze potential thermal anomalies or temperature shifts during the Holy Month compared to non-Ramadan periods from 2013 to the 2025. Note that a 1 or 2-day variance from local moon sightings may occur due to the nature of the mathematical tabular model; however, this is considered negligible in long-term statistical analysis as it does not significantly impact the overall climatic trends.
 ```{r}
 is_ramadan_kuwaiti <- function(date) {
-  # Ensure input is in Date format
   d <- as.Date(date)
   
-  # Calculate Julian Day Number (Microsoft Standard offset)
-  jd <- as.numeric(d) + 2440588
+  jd <- as.numeric(d) + 2440588   # days since 1970 + offset
   
-  # Kuwaiti Algorithm parameters for lunar cycle synchronization
-  l <- jd - 1948440 + 10632
-  n <- floor((l - 1) / 10631)
-  l <- l - 10631 * n + 354
+  epoch <- 1948084
+  z <- jd - epoch
+  cyc <- floor(z / 10631)
+  z <- z - 10631 * cyc
   
-  # Determine Islamic Year and Month through cyclical iteration
-  j <- (floor((10985 - l) / 5316)) * (floor((50 * l) / 17719)) + 
-       (floor(l / 5670)) * (floor((43 * l) / 15238))
+  j <- floor((z - 0.133333) / (10631 / 30))   # shift ≈ 8.01/60
+  iy <- 30 * cyc + j
+  z <- z - floor(j * (10631 / 30) + 0.133333)
   
-  l <- l - (floor((30 - j) / 20)) * (floor((17719 * j) / 50)) - 
-       (floor(j / 25)) * (floor((15238 * j) / 43)) + 29
+  im <- floor((z + 28.5001) / 29.5)
+  if (im == 13) im <- 12
   
-  # Calculate Hijri Month (9 corresponds to Ramadan)
-  m <- floor((24 * l) / 709) 
+  m <- im 
+  y <- iy + 1 
   
-  # Calculate Hijri Year
-  y <- n * 30 + j - 30       
-  
-  # Return TRUE if the month is Ramadan (9)
   return(m == 9)
 }
-
 
 my_data <- my_data %>%
    mutate(is_ramadan = sapply(full_date, is_ramadan_kuwaiti))

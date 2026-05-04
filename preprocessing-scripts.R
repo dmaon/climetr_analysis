@@ -137,24 +137,25 @@ preprocessing <- function(
   
   # Add is_ramadan column by Kuwaiti algorithm
   is_ramadan_kuwaiti <- function(date) {
-    # Ensure input is in Date format
     d <- as.Date(date)
-    # Calculate Julian Day Number (Microsoft Standard offset)
-    jd <- as.numeric(d) + 2440588
-    # Kuwaiti Algorithm parameters for lunar cycle synchronization
-    l <- jd - 1948440 + 10632
-    n <- floor((l - 1) / 10631)
-    l <- l - 10631 * n + 354
-    # Determine Islamic Year and Month through cyclical iteration
-    j <- (floor((10985 - l) / 5316)) * (floor((50 * l) / 17719)) + 
-      (floor(l / 5670)) * (floor((43 * l) / 15238))
-    l <- l - (floor((30 - j) / 20)) * (floor((17719 * j) / 50)) - 
-      (floor(j / 25)) * (floor((15238 * j) / 43)) + 29
-    # Calculate Hijri Month (9 corresponds to Ramadan)
-    m <- floor((24 * l) / 709) 
-    # Calculate Hijri Year
-    y <- n * 30 + j - 30       
-    # Return TRUE if the month is Ramadan (9)
+    
+    jd <- as.numeric(d) + 2440588   # days since 1970 + offset
+    
+    epoch <- 1948084
+    z <- jd - epoch
+    cyc <- floor(z / 10631)
+    z <- z - 10631 * cyc
+    
+    j <- floor((z - 0.133333) / (10631 / 30))   # shift ≈ 8.01/60
+    iy <- 30 * cyc + j
+    z <- z - floor(j * (10631 / 30) + 0.133333)
+    
+    im <- floor((z + 28.5001) / 29.5)
+    if (im == 13) im <- 12
+    
+    m <- im 
+    y <- iy + 1 
+    
     return(m == 9)
   }
   my_data <- my_data %>%
