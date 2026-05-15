@@ -1,0 +1,22 @@
+---
+format: 
+  html:
+    lang: fa
+    dir: rtl
+---
+
+## لیست کارها
+
+1.  جمع‌آوری داده‌ها (بیرجند، تبریز، اصفهان، رشت، بندرعباس + مصر، ترکیه، اسلو، دبی)
+2.  Data Cleaning & Feature Engineering
+3.  ساخت دیتاست رمضان
+4.  تحلیل آماری (t-test + effect size
+5.  Visualization حرفه‌ای
+6.  ساخت داشبورد ساده (اختیاری اما فوق‌العاده)
+7.  مستند RMD یا Quarto
+8.  مقاله Medium + LinkedIn + Kaggle
+9.  ویدیو (در پایان، نه اول)
+10. اضافه به رزومه + GitHub
+11. README کامل و قابل اجرا
+12. فایل requirements.txt و اسکریپت data downloader
+   
