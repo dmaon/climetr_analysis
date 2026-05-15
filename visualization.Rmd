@@ -314,7 +314,7 @@ print(p)
 For each year, we take the rolling 30-day average temperature on the last day of Ramadan and compare it to the same day-of-year in all previous years. This helps answer: "Was the temperature at the end of Ramadan in year X unusually warm or cold compared to historical values on the same calendar date?". our last day of Ramadan is pointed with red "x".
 ```{r}
 top_padding <- 0.2
-start_date <- 2014
+start_date <- 2013
 end_date <- 2025
 plots <- c()
 

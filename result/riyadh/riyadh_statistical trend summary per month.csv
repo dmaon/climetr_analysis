@@ -1,0 +1,13 @@
+month,slope_per_year,total_change,lm_p,mk_p,mk_tau,trend
+1,0.034,0.41,0.7602,1,0,No significant trend
+2,-0.0059,-0.07,0.9542,0.7603,-0.077,No significant trend
+3,-0.1127,-1.35,0.2111,0.1272,-0.333,No significant trend
+4,-0.0138,-0.17,0.8807,0.9514,0.026,No significant trend
+5,0.0125,0.15,0.8043,0.6693,0.103,No significant trend
+6,0.1405,1.69,0.0151,0.0124,0.538,Significant increasing trend
+7,0.1002,1.2,0.1289,0.0995,0.359,No significant trend
+8,0.1335,1.6,0.0131,0.024,0.487,Significant increasing trend
+9,0.0798,0.96,0.106,0.1272,0.333,No significant trend
+10,0.0322,0.39,0.7393,0.583,0.128,No significant trend
+11,0.211,2.53,0.0038,0.006,0.59,Significant increasing trend
+12,0.183,2.2,0.0585,0.1499,0.333,No significant trend

@@ -39,9 +39,9 @@ chart_yearly_with_ramadan <- function(
     chart_title
 ) {
   dataset %>% filter(year == selected_year) %>% ggplot() +
-    geom_line(mapping = aes(x = full_date, y = y_column)) +
-    geom_line(data = . %>% filter(is_ramadan == TRUE), mapping = aes(x = full_date, y = y_column), color = "red") +
-    geom_smooth(aes(x = full_date, y = y_column),
+    geom_line(mapping = aes(x = full_date, y = .data[[y_column]])) +
+    geom_line(data = . %>% filter(is_ramadan == TRUE), mapping = aes(x = full_date, y = .data[[y_column]]), color = "red") +
+    geom_smooth(aes(x = full_date, y = .data[[y_column]]),
                 method = "loess",
                 span = 0.4,
                 se = FALSE,
@@ -354,7 +354,7 @@ chart_extreme_temperature_by_month <- function(
 }
 
 
-table_ramadan_extreme_days_percentage <- function(
+table_ramadan_extreme_days <- function(
     dataset, result_export_path, city_name
 ) {
   extreme_temperature_ramadan_days <- dataset %>%
@@ -415,7 +415,7 @@ chart_year_by_year_comparison <- function(
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
-  ggsave(paste0(result_export_path, "year-by-year comparison: Extreme days in Ramadan vs. full year.png"))
+  ggsave(paste0(result_export_path, "year-by-year comparison - Extreme days in Ramadan vs. full year.png"))
 }
 
 
@@ -425,7 +425,7 @@ visualizations <- function(
   city_name
 ) {
   # Read dataset
-  my_data <- readr::read_csv('D:/climetr/climetr_analysis/datasets/birjand_clean_dataset.csv')
+  my_data <- readr::read_csv(dataset_file_path)
   
   # Long-term temperature overview (2013–2025)
   chart_long_temperature_overview(
@@ -558,7 +558,7 @@ visualizations <- function(
     dataset = my_data, 
     result_export_path = result_export_path, 
     city_name = city_name,
-    start_date = 2014,
+    start_date = 2013,
     end_date = 2025,
     top_padding = 0.2
   )
@@ -602,25 +602,25 @@ visualizations <- function(
 
 # list of datasets
 datasets_list <- c(
-  "Birjand_clean_dataset.csv"
-  # "Singapore_clean_dataset.csv",
-  # "Mexico-city_clean_dataset.csv",
-  # "Rio-de-janeiro_clean_dataset.csv",
-  # "Riyadh_clean_dataset.csv",
-  # "Dubai_clean_dataset.csv",
-  # "Bandar-abbas_clean_dataset.csv",
-  # "Cairo_clean_dataset.csv",
-  # "Isfahan_clean_dataset.csv",
-  # "Adelaide_clean_dataset.csv",
-  # "Rasht_clean_dataset.csv",
-  # "Tabriz_clean_dataset.csv",
-  # "Nevada_clean_dataset.csv",
-  # "Ankara_clean_dataset.csv",
-  # "Barcelona_clean_dataset.csv",
-  # "London_clean_dataset.csv",
-  # "Moscow_clean_dataset.csv",
-  # "Oslo_clean_dataset.csv",
-  # "Svalbard_clean_dataset.csv"
+  "birjand_clean_dataset.csv",
+  "singapore_clean_dataset.csv",
+  "mexico-city_clean_dataset.csv",
+  "rio-de-janeiro_clean_dataset.csv",
+  "riyadh_clean_dataset.csv",
+  "dubai_clean_dataset.csv",
+  "bandar-abbas_clean_dataset.csv",
+  "cairo_clean_dataset.csv",
+  "isfahan_clean_dataset.csv",
+  "adelaide_clean_dataset.csv",
+  "rasht_clean_dataset.csv",
+  "tabriz_clean_dataset.csv",
+  "nevada_clean_dataset.csv",
+  "ankara_clean_dataset.csv",
+  "barcelona_clean_dataset.csv",
+  "london_clean_dataset.csv",
+  "moscow_clean_dataset.csv",
+  "oslo_clean_dataset.csv",
+  "svalbard_clean_dataset.csv"
 )
 
 work_directory <- "D:\\climetr\\climetr_analysis\\"
