@@ -1627,11 +1627,10 @@ Guide</h1>
 
 <div id="load-inspect" class="section level2">
 <h2>Load &amp; Inspect</h2>
-<p>In this phase, we load the dataset and perform an initial inspection
-to understand its structure, size, and basic properties.<br />
-The first 20 lines of the dataset contain metadata and header
-information provided by NASA POWER, therefore they are skipped during
-data import.</p>
+<p>In this phase, I load the dataset and perform an initial inspection
+to understand its structure, dimensions, and overall quality. The first
+20 lines of the NASA POWER file contain metadata and header information
+and are therefore skipped during import.import.</p>
 <pre class="r"><code>my_data &lt;- readr::read_csv(&#39;D:/climetr/climetr_analysis/datasets/POWER_Point_Daily_20130101_20251123_032d86N_059d22E_LST_Birjand.csv&#39;, skip = 20)</code></pre>
 <pre><code>## Rows: 4710 Columns: 14
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -1640,8 +1639,8 @@ data import.</p>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>then we should inspect it to find any unusual values and know our
-data better.</p>
+<p>The dataset is then inspected to identify potential anomalies,
+missing values, and general data characteristics.</p>
 <pre class="r"><code>skim_without_charts(my_data)</code></pre>
 <table>
 <caption>Data summary</caption>
@@ -1879,20 +1878,24 @@ data better.</p>
 </tr>
 </tbody>
 </table>
-<p>in dataset the values for missing source data that cannot be computed
-or is outside of the sources availability range is -999, so we should
-mark them as “na”.</p>
-<p>first we need to mark out-range values to “NA”.</p>
+<p>In NASA POWER datasets, unavailable or non-computable values are
+encoded as -999. These values must be converted to NA before further
+analysis.</p>
+<p>The following step replaces all -999 values with NA while preserving
+the YEAR and DOY fields.</p>
 <pre class="r"><code>exclude_cols &lt;- c(&quot;YEAR&quot;, &quot;DOY&quot;)
 my_data[, !colnames(my_data) %in% exclude_cols] &lt;- 
   lapply(my_data[, !colnames(my_data) %in% exclude_cols], 
          function(col) { col[col == -999] &lt;- NA; col })</code></pre>
-<p>now we need to make sure that T2M_MIN &lt;= T2M &lt;= T2M_MAX.</p>
+<p>A consistency check is performed to verify that the daily mean
+temperature lies between the reported minimum and maximum
+temperatures.</p>
 <pre class="r"><code>my_data %&gt;% filter(!(T2M &gt;= T2M_MIN &amp; T2M &lt;= T2M_MAX)) %&gt;% {
   if (nrow( . &gt; 0))
     print(&quot;Something is wrong.&quot;)
 }</code></pre>
-<p>now we should check it again.</p>
+<p>A second inspection is performed after handling missing values to
+confirm that the dataset structure remains valid.</p>
 <pre class="r"><code>skim_without_charts(my_data)</code></pre>
 <table>
 <caption>Data summary</caption>
@@ -2133,16 +2136,16 @@ my_data[, !colnames(my_data) %in% exclude_cols] &lt;-
 </div>
 <div id="cleaning" class="section level2">
 <h2>Cleaning</h2>
-<p>In this phase, we clean the dataset by handling missing values,
-removing invalid entries, and ensuring data consistency. in this case we
-remove rows that have all “NA” on important parameters.</p>
+<p>In this phase, I remove observations that contain no usable
+meteorological information. Rows where all weather variables are missing
+are excluded from further analysis.</p>
 <pre class="r"><code>find_na_rows &lt;- apply(is.na(my_data[, !names(my_data) %in% exclude_cols]), 1, all)
 idx_of_na_rows &lt;- which(find_na_rows)
 my_data &lt;- my_data[-idx_of_na_rows, ]</code></pre>
 </div>
 <div id="feature-preparation" class="section level2">
 <h2>Feature Preparation</h2>
-<p>In this phase, we convert column names into clear, consistent, and
+<p>In this phase, I convert column names into clear, consistent, and
 human-readable labels to improve usability during analysis.</p>
 <p>parameters information:</p>
 <table>
@@ -2228,20 +2231,22 @@ Irradiance (MJ/m^2/day)</td>
 </div>
 <div id="feature-engineering" class="section level2">
 <h2>Feature Engineering</h2>
-<p>In this phase, we create new informative variables from the existing
-columns to support deeper analysis and help us maybe explore even more
-than our base hyposis.</p>
+<p>In this phase, I derive additional variables from the original
+measurements to support exploratory analysis and address the study
+objectives more effectively.</p>
 <p><strong>date</strong>: The full calendar date was reconstructed from
 the year and day-of-year (DOY) fields to facilitate time-series
 visualization, aggregation, and seasonal analysis.</p>
 <pre class="r"><code>my_data &lt;- my_data %&gt;% mutate(full_date = as.Date(day_of_year - 1, origin = paste0(year, &quot;-01-01&quot;)))
 my_data &lt;- my_data %&gt;% mutate(month_number = month(full_date))</code></pre>
 <p><strong>temp_range</strong>: Daily temperature range computed as
-T2M_MAX - T2M_MIN; useful for detecting instability, heat stress, and
-diurnal variability.</p>
+T2M_MAX - T2M_MIN; useful for quantifying diurnal temperature
+variability and identifying periods with unusually large day–night
+temperature differences.</p>
 <pre class="r"><code>my_data &lt;- my_data %&gt;% mutate(temp_range = temp_air_max_c - temp_air_min_c)</code></pre>
-<p><strong>VPD</strong>: Vapor Pressure Deficit; a key indicator of
-atmospheric dryness and plant stress.</p>
+<p><strong>VPD</strong>: Vapor Pressure Deficit; a measure of
+atmospheric dryness that influences evaporation, thermal comfort, and
+environmental stress.</p>
 <pre class="r"><code>es &lt;- function(T) 0.6108 * exp(17.27 * T / (T + 237.3))
 my_data &lt;- my_data %&gt;% mutate(vpd_kpa = es(temp_air_mean_c) - es(temp_dewpoint_c))</code></pre>
 <p><strong>heat_index</strong>: The perceived temperature calculated
@@ -2251,11 +2256,12 @@ derived: <strong>HI_standard</strong>: Represents the baseline apparent
 temperature for all observations using the complete NOAA logic. This
 includes the “Simple Formula” for mild conditions and the “Rothfusz
 Regression” for higher temperatures, providing a continuous series for
-climatic trend analysis. <strong>HI_filtered</strong>: Specifically
-identifies significant heat stress events. In this column, HI values are
-recorded only when physiological thresholds are met (<span class="math inline">\(T \ge 27^\circ C\)</span> and <span class="math inline">\(RH \ge 40\%\)</span>), with all other conditions
-set to NA to isolate periods of thermal risk for feature
-engineering.</p>
+climatic trend analysis. <strong>HI_filtered</strong>: A
+project-specific filtered version of the Heat Index. Values are retained
+only when air temperature is at least 27°C and relative humidity is at
+least 40%, while all other observations are set to NA. This filter is
+intended to focus analyses on conditions where heat-related discomfort
+is more likely to occur.</p>
 <pre class="r"><code>compute_heat_index_noaa &lt;- function(temp_c, rh) {
   # 1. Handle invalid humidity values (outside 0-100 range) by converting to NA
   rh[rh &lt; 0 | rh &gt; 100] &lt;- NA_real_
@@ -2325,7 +2331,7 @@ my_data &lt;- my_data %&gt;%
     HI_standard = compute_heat_index_noaa(temp_air_mean_c, humidity_relative_percent),
     HI_filtered = ifelse(temp_air_mean_c &gt;= 27 &amp; humidity_relative_percent &gt;= 40, HI_standard, NA)
   )</code></pre>
-<p><strong>heat_index_rel_temp (Thermal Discomfort Delta)</strong>:This
+<p><strong>heat_index_rel_temp (Thermal Discomfort Delta)</strong>: This
 metric quantifies the impact of humidity on human perceived temperature,
 calculated as the difference between the Heat Index and the actual air
 temperature (HI_standard - T_actual). It measures the “additional
@@ -2345,50 +2351,42 @@ making the air feel slightly cooler than its actual temperature.</p>
 <p><strong>is_ramadan</strong>: Identifies dates within Ramadan using
 the Kuwaiti Algorithm to analyze potential thermal anomalies or
 temperature shifts during the Holy Month compared to non-Ramadan periods
-from 2013 to the 2025. Note that a 1 or 2-day variance from local moon
+from 2013 to 2025. Note that a 1 or 2-day variance from local moon
 sightings may occur due to the nature of the mathematical tabular model;
 however, this is considered negligible in long-term statistical analysis
 as it does not significantly impact the overall climatic trends.</p>
 <pre class="r"><code>is_ramadan_kuwaiti &lt;- function(date) {
-  # Ensure input is in Date format
   d &lt;- as.Date(date)
   
-  # Calculate Julian Day Number (Microsoft Standard offset)
-  jd &lt;- as.numeric(d) + 2440588
+  jd &lt;- as.numeric(d) + 2440588   # days since 1970 + offset
   
-  # Kuwaiti Algorithm parameters for lunar cycle synchronization
-  l &lt;- jd - 1948440 + 10632
-  n &lt;- floor((l - 1) / 10631)
-  l &lt;- l - 10631 * n + 354
+  epoch &lt;- 1948084
+  z &lt;- jd - epoch
+  cyc &lt;- floor(z / 10631)
+  z &lt;- z - 10631 * cyc
   
-  # Determine Islamic Year and Month through cyclical iteration
-  j &lt;- (floor((10985 - l) / 5316)) * (floor((50 * l) / 17719)) + 
-       (floor(l / 5670)) * (floor((43 * l) / 15238))
+  j &lt;- floor((z - 0.133333) / (10631 / 30))   # shift ≈ 8.01/60
+  iy &lt;- 30 * cyc + j
+  z &lt;- z - floor(j * (10631 / 30) + 0.133333)
   
-  l &lt;- l - (floor((30 - j) / 20)) * (floor((17719 * j) / 50)) - 
-       (floor(j / 25)) * (floor((15238 * j) / 43)) + 29
+  im &lt;- floor((z + 28.5001) / 29.5)
+  if (im == 13) im &lt;- 12
   
-  # Calculate Hijri Month (9 corresponds to Ramadan)
-  m &lt;- floor((24 * l) / 709) 
+  m &lt;- im 
+  y &lt;- iy + 1 
   
-  # Calculate Hijri Year
-  y &lt;- n * 30 + j - 30       
-  
-  # Return TRUE if the month is Ramadan (9)
   return(m == 9)
 }
 
-
 my_data &lt;- my_data %&gt;%
    mutate(is_ramadan = sapply(full_date, is_ramadan_kuwaiti))</code></pre>
-<p><strong>Rolling Statistics &amp; Anomalies</strong>: Calculated 7-day
-and 30-day moving averages and standard deviations to smooth
-fluctuations and quantify variability. Additionally, temperature
-anomalies are derived to detect deviations from seasonal norms during
-the Ramadan period. These features highlight days that are unusually
-warm or cold compared to the typical local weather. By calculating the
-distance from the 30-day average, we can classify “extreme” events that
-stand out from the normal seasonal patterns.</p>
+<p><strong>Rolling Statistics &amp; Anomalies</strong>: Rolling averages
+and rolling standard deviations are computed using 7-day and 30-day
+windows to smooth short-term fluctuations and characterize local
+variability. These statistics are also used to identify unusually hot or
+cold days relative to recent conditions. Extreme temperature events are
+defined as observations lying more than two rolling standard deviations
+above or below the 30-day moving average.</p>
 <pre class="r"><code>my_data &lt;- my_data %&gt;%
   mutate(
     rolling_avg_7 = rollmean(temp_air_mean_c, k = 7,  align = &quot;right&quot;, fill = NA),
@@ -2399,10 +2397,12 @@ stand out from the normal seasonal patterns.</p>
     is_extreme_hot = temp_air_mean_c &gt; (rolling_avg_30 + 2 * rolling_sd_30),
     is_extreme_cold = temp_air_mean_c &lt; (rolling_avg_30 - 2 * rolling_sd_30)
   )</code></pre>
-<p><strong>daily_anomaly</strong>: Deviation of the daily value from its
-multi-year climatological mean computed for the same day of year (DOY),
-used to remove seasonal effects and highlight interannual
-variability.</p>
+<p><strong>Climatological Anomalies</strong>: Climatological anomalies
+are calculated by comparing each observation to the long-term mean for
+the same day of the year (DOY). This approach removes the expected
+seasonal cycle and highlights whether a particular day was warmer,
+cooler, or more thermally stressful than normal for that calendar
+date.</p>
 <pre class="r"><code>climatology &lt;- my_data %&gt;%
   group_by(day_of_year) %&gt;%
   summarise(
@@ -2417,6 +2417,11 @@ my_data &lt;- my_data %&gt;%
     temp_anomaly = temp_air_mean_c - mean_temp_doy,
     hi_anomaly   = heat_index_rel_temp - mean_hi_doy
   )</code></pre>
+<p>temp_anomaly: Difference between the observed air temperature and the
+long-term climatological mean temperature for the same day of year.</p>
+<p>thermal_discomfort_anomaly: Difference between the observed Thermal
+Discomfort Delta and its long-term climatological mean for the same day
+of year.</p>
 <p>These engineered features allow the dataset to better represent
 seasonal patterns, human-perceived temperatures, atmospheric stress, and
 short-term temporal dynamics. They also make the data more suitable for
@@ -2426,7 +2431,7 @@ exploratory analysis, statistical modeling, and visualization.</p>
 <h2>Save Clean Data</h2>
 <p>Finally, we save the cleaned and prepared dataset for later use in
 analysis and visualization.</p>
-<pre class="r"><code>my_data &lt;- readr::write_csv(my_data, &#39;D:/climetr/climetr_analysis/datasets/birjand_clean_dataset.csv&#39;)</code></pre>
+<pre class="r"><code>readr::write_csv(my_data, &#39;D:/climetr/climetr_analysis/datasets/birjand_clean_dataset.csv&#39;)</code></pre>
 </div>
 
 
