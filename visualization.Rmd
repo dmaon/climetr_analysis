@@ -9,7 +9,7 @@ This document serves as the **main exploratory visualization file** for dataset 
 
 Different plotting methods, smoothing techniques, comparative overlays (especially highlighting Ramadan periods), rolling statistics, trend analysis, extreme event detection, and hypothesis-driven comparisons are used to uncover possible seasonal behaviors, long-term changes, and month-specific phenomena.
 
-All visualizations and summaries are **exploratory** — they aim to reveal insights rather than test formal hypotheses (although some informal hypotheses are discussed).
+All visualizations and summaries are **exploratory** — they aim to reveal insights rather than test formal hypotheses, although several visualizations are motivated by the research questions.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -46,12 +46,12 @@ my_data %>%
     expand = c(0.01, 0.01)
   ) +
   labs(title = "Mean Daily Temperature – Birjand (2013–2025)",
-       x = "Year", y = "Temperature (C°)") +
+       x = "Year", y = "Temperature (°C)") +
   theme_minimal()
 ```
 
 ## Yearly temperature with Ramadan highlight (selected year)
-We repeat the same visualization approach for humidity, wind speed, dew point, daily temperature range, VPD, Heat Index, and Thermal Discomfort Delta — all for a representative year (2024) with a loess smoothing overlay. The Ramadan period is highlighted in red purely for visual reference, allowing easy inspection of seasonal patterns and overall annual behavior across multiple variables.
+The figure below shows the daily mean air temperature throughout a selected year (2024). A loess smoothing curve is added to emphasize the seasonal temperature cycle, while days belonging to Ramadan are highlighted in red.
 ```{r}
 selected_year <- 2024
 
@@ -70,12 +70,11 @@ my_data %>% filter(year == selected_year) %>% ggplot() +
     expand = c(0.01, 0.01)
   ) +
   labs(title = paste("Daily Mean Temperature –", selected_year),
-       subtitle = "Red segment = Ramadan period", x = "Month", y = "Temperature (C°)")
+       subtitle = "Red segment = Ramadan period", x = "Month", y = "Temperature (°C)")
 ```
 
-
 ## Same style comparison for other variables in the selected year
-We repeat the same visualization approach for humidity, wind speed, dew point, daily temperature range, VPD, Heat Index, and Thermal Discomfort Delta — all with Ramadan highlighted in red. This helps quickly scan whether Ramadan periods show distinct behavior in any of these variables.
+I apply the same visualization approach to humidity, wind speed, dew point temperature, daily temperature range, vapor pressure deficit (VPD), Heat Index, Thermal Discomfort Delta, and rolling temperature averages. Ramadan days are highlighted in red to facilitate visual comparison with the rest of the year.
 ```{r}
 selected_year <- 2024
 
@@ -246,9 +245,8 @@ my_data %>% filter(year == selected_year) %>%
 
 ```
 
-
-## Recent temperatures comparations from 2021-2025
-This plot overlays loess-smoothed daily mean temperature curves for the last five years (2021–2025), allowing direct visual comparison of seasonal patterns and inter-annual differences.
+## Recent temperatures comparations from (2021–2025)
+This plot overlays loess-smoothed daily mean temperature curves for the last five years (2021–2025), allowing direct visual comparison of seasonal patterns and interannual variability.
 ```{r, fig.width=12, fig.height=6}
 my_colors <- c(
   "2021" = "#1f77b4",
@@ -292,7 +290,7 @@ p <- ggplot() +
   labs(
     title    = paste0("Loess Smoothed Daily Mean Temperature (", start_year, "–", end_year, ")"),
     x        = "Day of Year",
-    y        = "Temperature (C°)",
+    y        = "Temperature (°C)",
     color    = "Year"
   ) +
   
@@ -311,7 +309,7 @@ print(p)
 ```
 
 ## Comparing end-of-Ramadan rolling average to previous years
-For each year, we take the rolling 30-day average temperature on the last day of Ramadan and compare it to the same day-of-year in all previous years. This helps answer: "Was the temperature at the end of Ramadan in year X unusually warm or cold compared to historical values on the same calendar date?". our last day of Ramadan is pointed with red "x".
+For each Ramadan year, I identify the last day of Ramadan and extract its 30-day rolling average temperature. I then compare that value with temperatures observed on the same day-of-year in previous years. This provides a climatological reference for determining whether the end of Ramadan occurred under relatively warm or cool conditions. The end-of-Ramadan observation for the selected year is marked with a red “X”.
 ```{r}
 top_padding <- 0.2
 start_date <- 2013
@@ -336,7 +334,7 @@ for (ith_year in end_date:(start_date + 1)) {
     ggplot() +
     geom_point(aes(x = full_date, y = rolling_avg_30), color = "blue") +
     labs(title = paste0("30-day Rolling Avg on Last Day of Ramadan ", ith_year, " vs Past Years"),
-         subtitle = paste0("Comparing end-of-Ramadan temperature of ", ith_year, " to same date in previous years"), x = "Year", y = "30-day Rolling Avgerage Temperature (C°)",) +
+         subtitle = paste0("Comparing end-of-Ramadan temperature of ", ith_year, " to same date in previous years"), x = "Year", y = "30-day Rolling Avgerage Temperature (°C)",) +
     annotate("text", x = last_day_date, y = ramadan_temperature, 
              label = "x", color = "red") +
     scale_x_date(date_breaks = "12 month", date_labels = "%Y") +
@@ -360,10 +358,8 @@ for (ith_year in end_date:(start_date + 1)) {
 plots
 ```
 
-
-
 ## Monthly mean Heat Index trends across years
-This section calculates the mean Heat Index for each month across all years and fits linear trends to detect whether specific months are experiencing systematic warming or cooling over time.
+This section calculates monthly mean Heat Index values and visualizes their evolution across years. Linear trend lines are added to help identify potential long-term increases or decreases in thermal stress conditions for each month. Numeric labels are colored relative to the long-term monthly average. Red labels indicate years with mean Heat Index values above the monthly average, whereas blue labels indicate values below the monthly average.
 ```{r}
 data <- tibble()
 plots <- c()
@@ -392,7 +388,7 @@ geom_smooth(
   color = "red", linewidth = 1.3, linetype = "solid"
 ) +
 geom_point(aes(x = year, y = mean_heat_index), color = "darkblue", size = 2.2) +
-labs(x = "Year", y = "Mean Heat Index (C°)", 
+labs(x = "Year", y = "Mean Heat Index (°C)", 
          title = paste0("Mean Heat Index Trend – ", month.name[month]),
          subtitle = paste0(month.name[month], " from ", min(all_years), " to ", max(all_years))) +
     scale_x_continuous(
@@ -418,7 +414,7 @@ plots
 ```
 
 ## Statistical trend summary per month
-We fit linear models and perform Mann-Kendall tests on monthly mean Heat Index to formally identify which months show significant long-term warming or cooling.
+I fit linear regression models and perform Mann–Kendall trend tests on monthly mean Heat Index values to assess the direction, magnitude, and statistical significance of long-term trends.
 ```{r}
 analyze_trend <- function(df_month) {
   
@@ -470,10 +466,16 @@ trend_summary <- data %>%
 
 print(trend_summary)
 ```
-
+- month: Calendar month (1–12) analyzed.
+- slope_per_year: Estimated annual change in monthly mean Heat Index (°C/year).
+- total_change: Estimated cumulative change over the study period.
+- lm_p: P-value from the linear regression model.
+- mk_p: P-value from the Mann–Kendall trend test.
+- mk_tau: Kendall's Tau coefficient indicating trend direction and strength.
+- trend: Qualitative interpretation based on both statistical tests.
 
 ## Extreme temperature days by month (hot vs cold)
-We identify days with extreme heat or cold (defined earlier using 30-day rolling mean ± 2 SD) and count how many such days occurred in each month across all years.
+I identify days with extreme heat or cold (previously defined as values exceeding the 30-day rolling mean ± 2 standard deviations) and summarize their monthly distribution across the entire study period.
 ```{r}
 extreme_temperature_days <- my_data %>% 
   filter(is_extreme_hot == TRUE | is_extreme_cold == TRUE)
@@ -537,12 +539,12 @@ ggplot(result_long, aes(x = month_name, y = count, fill = temperature_type)) +
 
 
 
-## ??
+## Extreme temperature occurrence during Ramadan
 To identify cities with the highest temperature extremes during Ramadan, we calculated two key metrics:
 
 - **Percentage of extreme temperature days within Ramadan**  
   (Number of extreme days during Ramadan ÷ Total number of Ramadan days across the period)  
-  This ratio shows how frequently extreme conditions (very hot or very cold) occurred during Ramadan. It is a fair metric for comparing cities, as the number of Ramadan days is roughly consistent each year.
+  This ratio summarizes how frequently extreme temperature events occurred during Ramadan throughout the study period.
 
 - **Year-by-year comparison of extreme days**  
   A bar chart compares the total number of extreme days in each full year against the number of extreme days occurring only during Ramadan in the same year. This helps visualize whether Ramadan periods contributed disproportionately to annual extremes in specific years.
@@ -562,7 +564,7 @@ print(paste("Percentage of extreme days during Ramadan:", round(ramadan_extreme_
 ```
 
 ## Year-by-year comparison: Extreme days in Ramadan vs. full year
-This bar chart shows, for each year, the total number of extreme temperature days in the entire year versus the subset that occurred during Ramadan. It highlights years in which Ramadan had an unusually high share of extremes.
+This bar chart shows, for each year, the total number of extreme temperature days in the entire year versus the subset that occurred during Ramadan. This comparison helps determine whether extreme temperature events were disproportionately concentrated within Ramadan in particular years.
 ```{r}
 yearly_summary <- my_data %>%
   mutate(year = year(full_date)) %>%
@@ -590,7 +592,7 @@ ggplot(yearly_summary, aes(x = as.factor(year), y = count, fill = type)) +
     color = "black"
   ) +
   scale_fill_manual(
-    values = c("total_extreme"   = "#999999", 
+    values = c("total_extreme"   = "#4575b4", 
                "ramadan_extreme" = "#d73027"),
     labels = c("total_extreme"   = "Full Year", 
                "ramadan_extreme" = "Ramadan")
