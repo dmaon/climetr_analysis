@@ -274,7 +274,7 @@ chart_monthly_mean_heat_index_trend <- function(
         size = 3.5
       ) +
       scale_color_manual(values = c("blue", "red"), guide = "none")
-    ggsave(paste0(result_export_path, "monthly mean Heat Index trends across years.png"))
+    ggsave(paste0(result_export_path, "monthly mean Heat Index trends across years - ", month.name[month],".png"))
     data <- rbind(data, temp_data)
   }
   readr::write_csv(data, paste0(result_export_path, city_name, '_monthly mean Heat Index trends across years.csv'))
