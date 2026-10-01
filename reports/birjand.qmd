@@ -1,58 +1,52 @@
 ---
-title: "birjand"
+title: "Birjand Climate Dynamics & Thermal Trend Analysis"
+subtitle: "A 13-Year High-Resolution Study (2013–2025) | Multi-City Climate Analytics Series"
+author: "@dmaon"
 format: html
 ---
 
-## Birjand
+## Climatological Context and Study Area Description
 
-Birjand is city that I born in it. Next I bring some visualization that I did from this city.
+Birjand, the capital of South Khorasan Province in eastern Iran, features a semi-arid to arid climate characterized by sharp daily and seasonal temperature fluctuations. In this study, I analyzed the trends of key temperature parameters and the Heat Index for Birjand over a 13-year period (2013–2025) using daily meteorological records. The objective of this report is to deliver a structured, data-driven statistical analysis suitable for evaluating localized climate dynamics and environmental risks.
 
-## Long-term temperature overview (2013–2025)
+## Long-Term Temperature Trend Analysis (2013–2025)
 
-This line + smooth plot shows the overall temperature behavior across the entire period, helping to visually identify any long-term warming or seasonal patterns. This chart it from 2013 to 2025 and show a higher view that how temperature changed through the years.
+To extract long-term temperature signals from seasonal noise, I applied non-parametric LOESS (Locally Estimated Scatterplot Smoothing) to the daily mean temperature time series. The smoothed curve reveals a subtle warming trend from 2021 through 2025, with mean daily temperatures increasing from approximately 13 °C to over 15 °C in 2025.
 
 ![](../result/birjand/long-term%20temperature%20overview%20(2013–2025).png)
 
-## Yearly temperature with Ramadan highlight (selected year)
+## Seasonal Dynamics and Ramadan Temperature Anomalies
 
-We repeat the same visualization approach for humidity, wind speed, dew point, daily temperature range, VPD, Heat Index, and Thermal Discomfort Delta — all for a representative year (2024) with a loess smoothing overlay. The Ramadan period is highlighted in red purely for visual reference, allowing easy inspection of seasonal patterns and overall annual behavior across multiple variables. Also there are some visualizations for humidity, wind speed, dew point, daily temperature range, VPD, Heat Index, and Thermal Discomfort Delta that you can find it in result report.
+The 2024 daily mean temperature time series clearly demonstrates the expected sinusoidal seasonal cycle
+. To evaluate temperature anomalies during specific temporal windows, I calculated the 30-day rolling average temperature on the final day of Ramadan and compared it against historical data for the same calendar date across all study years
+. For 2025, with Ramadan spanning from February 28 to March 29, the 30-day rolling average on the final day (March 29, 2025) was recorded at 8.16 °C, which is lower than the historical mean of 8.59 °C for that calendar date
+.
 
 ![](../result/birjand/yearly%20temperature%20(2024).png)
 
-## Comparing end-of-Ramadan rolling average to previous years
-
-I take the rolling 30-day average temperature on the last day of Ramadan and compare it to the same day-of-year in all previous years. This helps answer: "Was the temperature at the end of Ramadan in year X unusually warm or cold compared to historical values on the same calendar date?". our last day of Ramadan is pointed with red "x".
-
 ![](../result/birjand/30-day%20Rolling%20Avg%20on%20Last%20Day%20of%20Ramadan%202025%20vs%20Past%20Years.png)
 
-## Monthly mean Heat Index trends across years
+## Monthly Heat Index Trends and Statistical Testing
 
-This section calculates the mean Heat Index for each month across all years and fits linear trends to detect whether specific months are experiencing systematic warming or cooling over time. You can see on each month that based on red line is getting colder or warmer though years.
+By fitting Ordinary Least Squares (OLS) linear regression models and executing the non-parametric Mann-Kendall test on monthly mean Heat Index values, I evaluated temperature trends for each month across the 13-year period. Statistically significant warming trends were identified in only two of the twelve months:
+July: Regression slope of +0.15 °C/year (cumulative change ≈ +1.81 °C, p ≈ 0.008–0.024).
+November: Regression slope of +0.30 °C/year (cumulative change ≈ +3.54 °C, p ≈ 0.010–0.024).
+In the remaining ten months, no statistically significant upward or downward trends were detected (p > 0.05). The July Heat Index increase may impact urban water demand and cooling energy consumption, whereas the marked warming in November alters heating demand, agricultural water requirements, and localized frost risk patterns.
 
-![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png) ![](../result/birjand/yearly%20temperature%20(2024).png)
+![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20January.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20February.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20March.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20April.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20May.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20June.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20July.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20August.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20September.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20October.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20November.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20December.png)
 
-## Statistical trend summary per month
+## Extreme Temperature Event Assessment
 
-We fit linear models and perform Mann-Kendall tests on monthly mean Heat Index to formally identify which months show significant long-term warming or cooling.
-
-Statistically significant increasing trends were observed in two months:
-
-July: +0.15 °C per year (total change ≈ +1.81 °C, p ≈ 0.008–0.024) November: +0.30 °C per year (total change ≈ +3.54 °C, p ≈ 0.010–0.024)
-
-No significant upward or downward trend was detected in the remaining ten months (p \> 0.05 in both linear regression and Mann-Kendall tests). These warming trends — especially the stronger one in November — allow for additional hypotheses to be explored. For example: The upward temperature trend in July may have influenced urban water consumption patterns (e.g. higher demand for cooling, drinking, and irrigation). Analyzing historical water consumption and reservoir level data for July could help quantify this potential relationship and improve seasonal water planning in Birjand. The pronounced warming in November raises questions about other possible impacts, such as changes in agricultural water needs, energy demand for heating/cooling, frost risk patterns, or even public health effects related to temperature variability.
-
-However, long-term trends are not necessarily stable; recent years or short-term fluctuations may currently dominate actual water demand and other outcomes. Therefore, any planning or further hypothesis testing should also incorporate the most recent data available.
-
-## Extreme temperature days by month (hot vs cold)
-
-We identify days with extreme heat or cold (defined earlier using 30-day rolling mean ± 2 SD) and count how many such days occurred in each month across all years.
+I defined extreme temperature days as those exceeding two standard deviations (±2 SD) from the 30-day rolling mean. Based on this threshold:
+August recorded the highest frequency of extreme days, totaling 54 days (46 very cold and 8 very hot).
+October (43 days, predominantly very cold) and November (40 days, all very cold) followed in frequency.
+Very hot days occurred most frequently in June (23 days) and March (22 days).
+February displayed substantial thermal instability, recording 20 extreme days out of ~28–29 days (~69–71% of the month), evenly split between 10 very hot and 10 very cold days. Coinciding with the Persian month of Bahman, this extreme intra-month thermal variability intensifies bioclimatic stress and potential respiratory health risks in Birjand.
 
 ![](../result/birjand/extreme%20temperature%20days%20by%20month%20(hot%20vs%20cold).png)
 
-Analysis of daily temperature shows that August had the highest number of extreme days (54 days: 8 very hot + 46 very cold), followed by October (43 days, mostly very cold) and November (40 days, all very cold). Very hot days were most frequent in June (23 days) and March (22 days). February stands out with 20 extreme days out of \~28–29 days (\~69–71% of the month), consisting of 10 very hot and 10 very cold days. Since February largely overlaps with the Persian month of Bahman, the frequent and sharp temperature fluctuations during this period may contribute to higher rates of common colds and respiratory infections in Birjand, as repeated exposure to extreme cold and rapid temperature variability can impair nasal mucociliary clearance and local immune response, increasing susceptibility to viral infections (as supported by studies showing that cold exposure and temperature variability impair nasal mucociliary clearance and local immune response; e.g., Eccles, 2002; Mourtzoukou & Falagas, 2007).
+## Annual Share of Ramadan Extremes vs. Full Year
 
-## Year-by-year comparison: Extreme days in Ramadan vs. full year
-
-This bar chart shows, for each year, the total number of extreme temperature days in the entire year versus the subset that occurred during Ramadan. It highlights years in which Ramadan had an unusually high share of extremes.
+I evaluated the proportion of annual extreme temperature days occurring specifically within Ramadan relative to full-year totals. For instance, in 2018, 4 of the 32 total annual extreme temperature days coincided with the month of Ramadan.
 
 ![](../result/birjand/year-by-year%20comparison%20-%20Extreme%20days%20in%20Ramadan%20vs.%20full%20year.png)
