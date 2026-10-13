@@ -29,9 +29,21 @@ The 2024 daily mean temperature time series clearly demonstrates the expected si
 ## Monthly Heat Index Trends and Statistical Testing
 
 By fitting Ordinary Least Squares (OLS) linear regression models and executing the non-parametric Mann-Kendall test on monthly mean Heat Index values, I evaluated temperature trends for each month across the 13-year period. Statistically significant warming trends were identified in only two of the twelve months:
-July: Regression slope of +0.15 °C/year (cumulative change ≈ +1.81 °C, p ≈ 0.008–0.024).
-November: Regression slope of +0.30 °C/year (cumulative change ≈ +3.54 °C, p ≈ 0.010–0.024).
+**July**: Regression slope of +0.15 °C/year (cumulative change ≈ +1.81 °C, p ≈ 0.008–0.024).
+**November**: Regression slope of +0.30 °C/year (cumulative change ≈ +3.54 °C, p ≈ 0.010–0.024).
 In the remaining ten months, no statistically significant upward or downward trends were detected (p > 0.05). The July Heat Index increase may impact urban water demand and cooling energy consumption, whereas the marked warming in November alters heating demand, agricultural water requirements, and localized frost risk patterns.
+
+**Statistical Terminology & Methodological Note:**
+
+**$p$-value ($\text{lm\_p}$ / $\text{mk\_p}$)**: A measure of statistical significance representing the probability that an observed trend occurred due to random variability. A threshold of $p < 0.05$ denotes a statistically significant trend at the 95% confidence level.
+
+**Mann-Kendall Test (MK / $\text{mk\_p}$)**: A non-parametric rank correlation test used in climatology to confirm whether a monotonic upward or downward trend exists without assuming a normal data distribution.
+
+**Kendall’s Tau ($\tau$ / $\text{mk\_tau}$)**: A non-parametric correlation coefficient ranging from $-1$ to $+1$ that measures the strength and direction of a monotonic trend (positive values indicate an upward trajectory).
+
+**Classification Criteria**: A monthly warming trend is classified as statistically significant only when both the OLS regression ($\text{lm\_p} < 0.05$) and the Mann-Kendall test ($\text{mk\_p} < 0.05$) indicate significant upward shifts.
+
+**Note on Monthly Heat Index Plots**: Blue points represent years with a mean Heat Index at or below the overall multi-year average, while red points represent years above the overall average.
 
 ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20January.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20February.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20March.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20April.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20May.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20June.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20July.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20August.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20September.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20October.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20November.png) ![](../result/birjand/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20December.png)
 
