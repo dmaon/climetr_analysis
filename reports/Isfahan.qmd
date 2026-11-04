@@ -1,0 +1,69 @@
+---
+title: "Isfahan Climate Dynamics & Thermal Trend Analysis"
+subtitle: "A 13-Year High-Resolution Study (2013–2025) | Multi-City Climate Analytics Series"
+author: "@dmaon"
+format: html
+---
+
+## Climatological Context and Study Area Description
+
+Isfahan is situated in central Iran on the Zayanderud River basin at an elevation of approximately 1,570 m above sea level. It is characterized by a cold desert climate (Köppen climate classification BWk, transitioning to semi-arid BSk), featuring hot, dry summers, cold dry winters, low relative humidity, and pronounced diurnal temperature variations
+
+In this study, I analyzed the trends of key temperature parameters and the Heat Index for Isfahan over a 13-year period (2013–2025) using daily meteorological records. The objective of this report is to deliver a structured, data-driven statistical analysis suitable for evaluating localized climate dynamics and environmental risks.
+
+## Long-Term Temperature Trend Analysis (2013–2025)
+
+To extract long-term temperature signals from seasonal noise, I applied non-parametric LOESS (Locally Estimated Scatterplot Smoothing) to the daily mean temperature time series. The smoothed curve reveals long-term thermal variability across the study period, with the smoothed baseline temperature increasing from approximately 14.2 °C in 2013, stabilizing around 16.0 °C to 17.5 °C between 2014 and 2024, and rising toward 20.8 °C by late 2025, while daily mean temperatures span from approximately −5.5 °C during severe winter troughs to over 34 °C at summer peaks.
+
+![](../result/isfahan/long-term%20temperature%20overview%20(2013–2025).png)
+
+## Seasonal Dynamics and Ramadan Temperature Anomalies
+
+The 2024 daily mean temperature time series clearly demonstrates the expected sinusoidal seasonal cycle. To evaluate temperature anomalies during specific temporal windows, I calculated the 30-day rolling average temperature on the final day of Ramadan and compared it against historical data for the same calendar date across all study years. For 2025, with Ramadan concluding in late March, the 30-day rolling average on the final day was recorded at 9.22 °C, which is essentially aligned with (and marginally lower than) the historical mean of 9.24 °C for that calendar date across 2013–2025 (representing a slight negative anomaly of −0.02 °C).
+
+![](../result/isfahan/yearly%20temperature%20(2024).png)
+
+![](../result/isfahan/30-day%20Rolling%20Avg%20on%20Last%20Day%20of%20Ramadan%202025%20vs%20Past%20Years.png)
+
+## Monthly Heat Index Trends and Statistical Testing
+
+By fitting Ordinary Least Squares (OLS) linear regression models and executing the non-parametric Mann-Kendall (MK) test on monthly mean Heat Index values, I evaluated long-term thermal trends for each month across the 13-year study period (2013–2025). A statistically significant upward trend was identified in only one of the twelve months:
+
+**November**: Regression slope of +0.3316 °C/year (cumulative change = +3.98 °C, lm_p = 0.0038, mk_p = 0.0124, τ = 0.538).
+
+All other eleven months exhibited weak, non-significant, or oscillating trends where tests failed to meet the significance threshold (both $p < 0.05$), including **April** (slope = +0.1698 °C/year, total change = +2.04 °C, lm_p = 0.2198, mk_p = 0.5830, τ = 0.128), **October** (slope = +0.1340 °C/year, total change = +1.61 °C, lm_p = 0.1389, mk_p = 0.0995, τ = 0.359), **May** (slope = +0.1114 °C/year, lm_p = 0.3441, mk_p = 1.0000), **July** (slope = +0.0815 °C/year, lm_p = 0.1443, mk_p = 0.2001), and **June** (slope = +0.0666 °C/year, lm_p = 0.2140, mk_p = 0.2997).
+
+In arid Isfahan, summer Heat Index trends remain statistically stable without significant long-term acceleration; however, the marked late-autumn warming in November (+3.98 °C total increase) delays traditional seasonal cooling, postpones the onset of winter heating requirements, and impacts late-autumn agricultural and hydrological dynamics in the Zayanderud basin.
+
+**Statistical Terminology & Methodological Note:**
+
+**$p$-value ($\text{lm\_p}$ / $\text{mk\_p}$)**: A measure of statistical significance representing the probability that an observed trend occurred due to random variability. A threshold of $p < 0.05$ denotes a statistically significant trend at the 95% confidence level.
+
+**Mann-Kendall Test (MK / $\text{mk\_p}$)**: A non-parametric rank correlation test used in climatology to confirm whether a monotonic upward or downward trend exists without assuming a normal data distribution.
+
+**Kendall’s Tau ($\tau$ / $\text{mk\_tau}$)**: A non-parametric correlation coefficient ranging from $-1$ to $+1$ that measures the strength and direction of a monotonic trend (positive values indicate an upward trajectory).
+
+**Classification Criteria**: A monthly warming trend is classified as statistically significant only when both the OLS regression ($\text{lm\_p} < 0.05$) and the Mann-Kendall test ($\text{mk\_p} < 0.05$) indicate significant upward shifts.
+
+**Note on Monthly Heat Index Plots**: Blue points represent years with a mean Heat Index at or below the overall multi-year average, while red points represent years above the overall average.
+
+![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20January.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20February.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20March.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20April.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20May.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20June.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20July.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20August.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20September.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20October.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20November.png) ![](../result/isfahan/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20December.png)
+
+## Extreme Temperature Event Assessment
+
+I defined extreme temperature days as those exceeding two standard deviations (±2 SD) from the 30-day rolling mean
+. Based on this threshold, November recorded the highest overall frequency of extreme days in Bandar Abbas, totaling 78 days (all 78 being very cold anomalies relative to the rolling baseline). October followed with 56 days (all very cold), April with 48 days (all very hot), December with 44 days (all very cold), and January with 42 days (all very cold).
+
+Very hot extreme days were concentrated in spring and early summer, occurring most frequently in April (48 days)
+, followed by March, May, and June (39 days each).
+
+February recorded 27 extreme-temperature days (8 very cold and 19 very hot days), indicating substantial variability in the occurrence of temperature extremes. The presence of both categories within the same month highlights the need to examine the timing, intensity, and potential implications of these extremes in Bandar Abbas.
+
+
+![](../result/isfahan/extreme%20temperature%20days%20by%20month%20(hot%20vs%20cold).png)
+
+## Annual Share of Ramadan Extremes vs. Full Year
+
+I evaluated the proportion of annual extreme temperature days occurring specifically within Ramadan relative to full-year totals in Bandar Abbas. Across the 13-year study period (2013–2025), extreme temperature days occurred during Ramadan in nearly every year, peaking in 2017 with 8 extreme days out of 39 total annual extremes. For instance, in 2018, 5 of the 44 total annual extreme temperature days coincided with the month of Ramadan.
+
+![](../result/isfahan/year-by-year%20comparison%20-%20Extreme%20days%20in%20Ramadan%20vs.%20full%20year.png)
