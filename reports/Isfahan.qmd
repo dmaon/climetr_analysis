@@ -52,18 +52,20 @@ In arid Isfahan, summer Heat Index trends remain statistically stable without si
 ## Extreme Temperature Event Assessment
 
 I defined extreme temperature days as those exceeding two standard deviations (±2 SD) from the 30-day rolling mean
-. Based on this threshold, November recorded the highest overall frequency of extreme days in Bandar Abbas, totaling 78 days (all 78 being very cold anomalies relative to the rolling baseline). October followed with 56 days (all very cold), April with 48 days (all very hot), December with 44 days (all very cold), and January with 42 days (all very cold).
+. Based on this threshold, November recorded the highest overall frequency of extreme days in Isfahan, totaling 63 days (all 63 being very cold anomalies relative to the rolling baseline). September and October followed with 56 days each (all 56 being very cold anomalies in each month), August with 44 days (43 very cold, 1 very hot), May with 41 days (all 41 very hot), and April with 36 days (34 very hot, 2 very cold).
 
-Very hot extreme days were concentrated in spring and early summer, occurring most frequently in April (48 days)
-, followed by March, May, and June (39 days each).
+Very hot extreme days were concentrated in spring and early summer, occurring most frequently in May (41 days), followed by April (34 days), March (22 days), July (18 days), and February and June (15 days each).
 
-February recorded 27 extreme-temperature days (8 very cold and 19 very hot days), indicating substantial variability in the occurrence of temperature extremes. The presence of both categories within the same month highlights the need to examine the timing, intensity, and potential implications of these extremes in Bandar Abbas.
+February recorded 28 extreme-temperature days (13 very cold and 15 very hot days), indicating substantial transitional variability in the occurrence of temperature extremes.
+In total, seven months exhibited both hot and cold extreme events (January: 24 cold, 4 hot; February: 13 cold, 15 hot; March: 3 cold, 22 hot; April: 2 cold, 34 hot; July: 9 cold, 18 hot; August: 43 cold, 1 hot; December: 33 cold, 2 hot), highlighting distinct intra-seasonal thermal swings in Isfahan
+.
 
 
 ![](../result/isfahan/extreme%20temperature%20days%20by%20month%20(hot%20vs%20cold).png)
 
 ## Annual Share of Ramadan Extremes vs. Full Year
 
-I evaluated the proportion of annual extreme temperature days occurring specifically within Ramadan relative to full-year totals in Bandar Abbas. Across the 13-year study period (2013–2025), extreme temperature days occurred during Ramadan in nearly every year, peaking in 2017 with 8 extreme days out of 39 total annual extremes. For instance, in 2018, 5 of the 44 total annual extreme temperature days coincided with the month of Ramadan.
+I evaluated the proportion of annual extreme temperature days occurring specifically within Ramadan relative to full-year totals in Isfahan
+. Across the 13-year study period (2013–2025), extreme temperature days occurred during Ramadan in nearly every year (totaling 34 Ramadan extreme days out of 454 full-year extremes, or ~7.5%), peaking in 2018 with 9 extreme days out of 42 total annual extremes (21.4%). For instance, in 2016, 5 of the 30 total annual extreme temperature days coincided with Ramadan (16.7%), while in 2023, 4 of the 38 annual extremes occurred during Ramadan (10.5%). Peak full-year extreme occurrences took place in 2018 (42 days) and 2020 (42 days), followed by 2024 (40 days), whereas 2019 recorded zero extreme days during Ramadan (0 out of 31 annual extremes). 
 
 ![](../result/isfahan/year-by-year%20comparison%20-%20Extreme%20days%20in%20Ramadan%20vs.%20full%20year.png)
