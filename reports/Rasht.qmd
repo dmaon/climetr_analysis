@@ -1,0 +1,71 @@
+---
+title: "Rasht Climate Dynamics & Thermal Trend Analysis"
+subtitle: "A 13-Year High-Resolution Study (2013–2025) | Multi-City Climate Analytics Series"
+author: "@dmaon"
+format: html
+---
+
+## Climatological Context and Study Area Description
+
+Rasht is situated in northern Iran on the South Caspian coastal plain at an elevation of approximately −5 to 15 m relative to sea level
+. It is characterized by a humid subtropical climate (Köppen climate classification Cfa), featuring warm, humid summers, mild wet winters, high relative humidity, and moderate diurnal temperature variations.
+
+In this study, I analyzed the trends of key temperature parameters and the Heat Index for Rasht over a 13-year period (2013–2025) using daily meteorological records. The objective of this report is to deliver a structured, data-driven statistical analysis suitable for evaluating localized climate dynamics and environmental risks.
+
+## Long-Term Temperature Trend Analysis (2013–2025)
+
+To extract long-term temperature signals from seasonal noise, I applied non-parametric LOESS (Locally Estimated Scatterplot Smoothing) to the daily mean temperature time series
+. The smoothed curve reveals long-term thermal variability across the study period, with the smoothed baseline temperature increasing from approximately 16.0 °C in 2013, stabilizing around 17.0 °C to 18.0 °C between 2014 and 2024, and rising toward 20.0 °C by late 2025, while daily mean temperatures span from approximately −1.5 °C during severe winter troughs to approximately 31 °C to 32 °C at summer peaks.
+
+![](../result/rasht/long-term%20temperature%20overview%20(2013–2025).png)
+
+## Seasonal Dynamics and Ramadan Temperature Anomalies
+
+The 2024 daily mean temperature time series clearly demonstrates the expected sinusoidal seasonal cycle. To evaluate temperature anomalies during specific temporal windows, I calculated the 30-day rolling average temperature on the final day of Ramadan and compared it against historical data for the same calendar date across all study years. For 2025, with Ramadan concluding in late March, the 30-day rolling average on the final day was recorded at 11.09 °C, which is higher than the historical mean of 10.71 °C for that calendar date across 2013–2025 (representing a positive anomaly of +0.38 °C)
+.
+
+![](../result/rasht/yearly%20temperature%20(2024).png)
+
+![](../result/rasht/30-day%20Rolling%20Avg%20on%20Last%20Day%20of%20Ramadan%202025%20vs%20Past%20Years.png)
+
+## Monthly Heat Index Trends and Statistical Testing
+
+By fitting Ordinary Least Squares (OLS) linear regression models and executing the non-parametric Mann-Kendall (MK) test on monthly mean Heat Index values, I evaluated long-term thermal trends for each month across the 13-year study period (2013–2025). A statistically significant upward trend was identified in only one of the twelve months:
+
+**November**: Regression slope of +0.3553 °C/year (cumulative change = +4.26 °C, lm_p = 0.0124, mk_p = 0.024, τ = 0.487).
+
+All other eleven months exhibited weak, non-significant, or oscillating trends where tests failed to meet the significance threshold (both p < 0.05), including **April** (slope = +0.2487 °C/year, total change = +2.98 °C, lm_p = 0.0336, mk_p = 0.1606, τ = 0.308), **October** (slope = +0.1955 °C/year, total change = +2.35 °C, lm_p = 0.0377, mk_p = 0.0769, τ = 0.385), **May** (slope = −0.1261 °C/year, total change = −1.51 °C, lm_p = 0.1303, mk_p = 0.2001, τ = −0.282), **July** (slope = +0.0966 °C/year, total change = +1.16 °C, lm_p = 0.4328, mk_p = 0.0769, τ = 0.385), and **June** (slope = +0.0633 °C/year, total change = +0.76 °C, lm_p = 0.4861, mk_p = 0.3601, τ = 0.205).
+
+In humid Rasht, summer Heat Index trends remain statistically stable without significant long-term acceleration; however, the marked late-autumn warming in November (+4.26 °C total increase) delays traditional seasonal cooling, postpones the onset of winter heating requirements, and impacts late-autumn agricultural and hydrological dynamics in the South Caspian coastal basin.
+
+**Statistical Terminology & Methodological Note:**
+
+**$p$-value ($\text{lm\_p}$ / $\text{mk\_p}$)**: A measure of statistical significance representing the probability that an observed trend occurred due to random variability. A threshold of $p < 0.05$ denotes a statistically significant trend at the 95% confidence level.
+
+**Mann-Kendall Test (MK / $\text{mk\_p}$)**: A non-parametric rank correlation test used in climatology to confirm whether a monotonic upward or downward trend exists without assuming a normal data distribution.
+
+**Kendall’s Tau ($\tau$ / $\text{mk\_tau}$)**: A non-parametric correlation coefficient ranging from $-1$ to $+1$ that measures the strength and direction of a monotonic trend (positive values indicate an upward trajectory).
+
+**Classification Criteria**: A monthly warming trend is classified as statistically significant only when both the OLS regression ($\text{lm\_p} < 0.05$) and the Mann-Kendall test ($\text{mk\_p} < 0.05$) indicate significant upward shifts.
+
+**Note on Monthly Heat Index Plots**: Blue points represent years with a mean Heat Index at or below the overall multi-year average, while red points represent years above the overall average.
+
+![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20January.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20February.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20March.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20April.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20May.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20June.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20July.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20August.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20September.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20October.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20November.png) ![](../result/rasht/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20December.png)
+
+## Extreme Temperature Event Assessment
+
+I defined extreme temperature days as those exceeding two standard deviations (±2 SD) from the 30-day rolling mean
+. Based on this threshold, September recorded the highest overall frequency of extreme days in Rasht, totaling 58 days (51 very cold and 7 very hot anomalies relative to the rolling baseline). October followed with 51 days (49 very cold, 2 very hot), January with 43 days (37 very cold, 6 very hot), November with 41 days (all 41 being very cold anomalies), March with 36 days (7 very cold, 29 very hot), and May with 28 days (1 very cold, 27 very hot).
+
+Very hot extreme days were concentrated in spring and mid-summer, occurring most frequently in March (29 days), followed by May (27 days), April (26 days), July (17 days), and June (9 days).
+
+February recorded 24 extreme-temperature days (18 very cold and 6 very hot days), indicating substantial transitional variability in the occurrence of temperature extremes. In total, nine months exhibited both hot and cold extreme events (January: 37 cold, 6 hot; February: 18 cold, 6 hot; March: 7 cold, 29 hot; May: 1 cold, 27 hot; June: 1 cold, 9 hot; July: 7 cold, 17 hot; August: 16 cold, 7 hot; September: 51 cold, 7 hot; October: 49 cold, 2 hot), highlighting distinct intra-seasonal thermal swings in Rasht.
+
+
+![](../result/rasht/extreme%20temperature%20days%20by%20month%20(hot%20vs%20cold).png)
+
+## Annual Share of Ramadan Extremes vs. Full Year
+
+I evaluated the proportion of annual extreme temperature days occurring specifically within Ramadan relative to full-year totals in Rasht. Across the 13-year study period (2013–2025), extreme temperature days occurred during Ramadan in nearly every year (totaling 23 Ramadan extreme days out of 387 full-year extremes, or 5.9%), peaking in 2025 with 7 extreme days out of 33 total annual extremes (21.2%). For instance, in 2016, 1 of the 34 total annual extreme temperature days coincided with Ramadan (2.9%), while in 2023, 2 of the 26 annual extremes occurred during Ramadan (7.7%). Peak full-year extreme occurrences took place in 2020 (36 days) and 2015 (35 days), followed by 2016 (34 days) and both 2018 and 2025 (33 days each), whereas 2014 and 2018 recorded zero extreme days during Ramadan (0 out of 25 in 2014, and 0 out of 33 in 2018).
+
+![](../result/rasht/year-by-year%20comparison%20-%20Extreme%20days%20in%20Ramadan%20vs.%20full%20year.png)
