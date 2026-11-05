@@ -1,0 +1,69 @@
+---
+title: "Tabriz Climate Dynamics & Thermal Trend Analysis"
+subtitle: "A 13-Year High-Resolution Study (2013–2025) | Multi-City Climate Analytics Series"
+author: "@dmaon"
+format: html
+---
+
+## Climatological Context and Study Area Description
+
+Tabriz is situated in northwestern Iran in an intermontane valley at an elevation of approximately 1,350 to 1,600 m relative to sea level. It is characterized by a cold semi-arid climate (Köppen climate classification BSk), featuring warm, dry summers, cold snowy winters, moderate relative humidity, and pronounced diurnal temperature variations. In this study, I analyzed the trends of key temperature parameters and the Heat Index for Tabriz over a 13-year period (2013–2025) using daily meteorological records. The objective of this report is to deliver a structured, data-driven statistical analysis suitable for evaluating localized climate dynamics and environmental risks.
+
+## Long-Term Temperature Trend Analysis (2013–2025)
+
+To extract long-term temperature signals from seasonal noise, I applied non-parametric LOESS (Locally Estimated Scatterplot Smoothing) to the daily mean temperature time series. The smoothed curve reveals long-term thermal variability across the study period, with the smoothed baseline temperature increasing from approximately 7.0 °C in 2013, stabilizing around 9.5 °C to 10.5 °C between 2014 and 2024, and rising toward 14.0 °C to 14.5 °C by late 2025, while daily mean temperatures span from approximately −16.0 °C to −17.0 °C during severe winter troughs to approximately 29.0 °C to 30.0 °C at summer peaks.
+
+![](../result/tabriz/long-term%20temperature%20overview%20(2013–2025).png)
+
+## Seasonal Dynamics and Ramadan Temperature Anomalies
+
+The 2024 daily mean temperature time series clearly demonstrates the expected sinusoidal seasonal cycle
+. To evaluate temperature anomalies during specific temporal windows, I calculated the 30-day rolling average temperature on the final day of Ramadan and compared it against historical data for the same calendar date across all study years
+. For 2025, with Ramadan concluding in late March, the 30-day rolling average on the final day was recorded at 3.94 °C, which is higher than the historical mean of 2.86 °C for that calendar date across 2013–2025 (representing a positive anomaly of +1.08 °C).
+
+![](../result/tabriz/yearly%20temperature%20(2024).png)
+
+![](../result/tabriz/30-day%20Rolling%20Avg%20on%20Last%20Day%20of%20Ramadan%202025%20vs%20Past%20Years.png)
+
+## Monthly Heat Index Trends and Statistical Testing
+
+By fitting Ordinary Least Squares (OLS) linear regression models and executing the non-parametric Mann-Kendall (MK) test on monthly mean Heat Index values, I evaluated long-term thermal trends for each month across the 13-year study period (2013–2025). A statistically significant upward trend was identified in two of the twelve months:
+
+**October**: Regression slope of +0.2181 °C/year (cumulative change = +2.62 °C, lm_p = 0.0216, mk_p = 0.0441, τ = 0.436).
+
+**November**: Regression slope of +0.2792 °C/year (cumulative change = +3.35 °C, lm_p = 0.0071, mk_p = 0.0087, τ = 0.564).
+
+All other ten months exhibited weak, non-significant, or oscillating trends where tests failed to meet the significance threshold (both p < 0.05), including **December** (slope = +0.3130 °C/year, total change = +3.76 °C, lm_p = 0.0466, mk_p = 0.2437, τ = 0.273), **April** (slope = +0.1551 °C/year, total change = +1.86 °C, lm_p = 0.1796, mk_p = 0.3601, τ = 0.205), **August** (slope = +0.1122 °C/year, total change = +1.35 °C, lm_p = 0.2574, mk_p = 0.2997, τ = 0.231), **June** (slope = +0.1038 °C/year, total change = +1.25 °C, lm_p = 0.2741, mk_p = 0.3601, τ = 0.205), and **February** (slope = −0.1249 °C/year, total change = −1.50 °C, lm_p = 0.3017, mk_p = 0.2464, τ = −0.256).
+
+In semi-arid Tabriz, summer Heat Index trends remain statistically stable without significant long-term acceleration; however, the marked autumn warming in October (+2.62 °C total increase) and November (+3.35 °C total increase) delays traditional seasonal cooling, postpones the onset of winter heating requirements, and impacts autumn agricultural and hydrological dynamics in the Lake Urmia basin.
+
+**Statistical Terminology & Methodological Note:**
+
+**$p$-value ($\text{lm\_p}$ / $\text{mk\_p}$)**: A measure of statistical significance representing the probability that an observed trend occurred due to random variability. A threshold of $p < 0.05$ denotes a statistically significant trend at the 95% confidence level.
+
+**Mann-Kendall Test (MK / $\text{mk\_p}$)**: A non-parametric rank correlation test used in climatology to confirm whether a monotonic upward or downward trend exists without assuming a normal data distribution.
+
+**Kendall’s Tau ($\tau$ / $\text{mk\_tau}$)**: A non-parametric correlation coefficient ranging from $-1$ to $+1$ that measures the strength and direction of a monotonic trend (positive values indicate an upward trajectory).
+
+**Classification Criteria**: A monthly warming trend is classified as statistically significant only when both the OLS regression ($\text{lm\_p} < 0.05$) and the Mann-Kendall test ($\text{mk\_p} < 0.05$) indicate significant upward shifts.
+
+**Note on Monthly Heat Index Plots**: Blue points represent years with a mean Heat Index at or below the overall multi-year average, while red points represent years above the overall average.
+
+![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20January.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20February.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20March.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20April.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20May.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20June.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20July.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20August.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20September.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20October.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20November.png) ![](../result/tabriz/monthly%20mean%20Heat%20Index%20trends%20across%20years%20-%20December.png)
+
+## Extreme Temperature Event Assessment
+
+I defined extreme temperature days as those exceeding two standard deviations (±2 SD) from the 30-day rolling mean
+. Based on this threshold, September recorded the highest overall frequency of extreme days in Tabriz, totaling 61 days (all 61 being very cold anomalies relative to the rolling baseline). October followed with 59 days (all 59 being very cold), November with 47 days (all 47 being very cold anomalies), January with 43 days (33 very cold, 10 very hot), June with 42 days (all 42 being very hot), and July with 41 days (9 very cold, 32 very hot).
+
+Very hot extreme days were concentrated in spring and summer, occurring most frequently in June (42 days), followed by April (34 days), July (32 days), May (28 days), and March (22 days).
+
+February recorded 21 extreme-temperature days (18 very cold and 3 very hot days), indicating substantial transitional variability in the occurrence of temperature extremes. In total, five months exhibited both hot and cold extreme events (January: 33 cold, 10 hot; February: 18 cold, 3 hot; March: 7 cold, 22 hot; April: 3 cold, 34 hot; July: 9 cold, 32 hot), highlighting distinct intra-seasonal thermal swings in Tabriz.
+
+![](../result/tabriz/extreme%20temperature%20days%20by%20month%20(hot%20vs%20cold).png)
+
+## Annual Share of Ramadan Extremes vs. Full Year
+
+I evaluated the proportion of annual extreme temperature days occurring specifically within Ramadan relative to full-year totals in Tabriz. Across the 13-year study period (2013–2025), extreme temperature days occurred during Ramadan in most years (totaling 38 Ramadan extreme days out of 460 full-year extremes, or 8.3%), peaking in 2024 with 7 extreme days out of 35 total annual extremes (20.0%). For instance, in 2016, 6 of the 41 total annual extreme temperature days coincided with Ramadan (14.6%), while in 2023, 2 of the 32 annual extremes occurred during Ramadan (6.2%). Peak full-year extreme occurrences took place in 2020 (47 days) and 2021 (43 days), followed by 2016 (41 days) and both 2015 and 2018 (37 days each), whereas 2013, 2019, and 2021 recorded zero extreme days during Ramadan (0 out of 32 in 2013, 0 out of 28 in 2019, and 0 out of 43 in 2021).
+
+![](../result/tabriz/year-by-year%20comparison%20-%20Extreme%20days%20in%20Ramadan%20vs.%20full%20year.png)
