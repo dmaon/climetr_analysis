@@ -13,7 +13,7 @@ In this study, I analyzed the trends of key temperature parameters and the Heat 
 
 ## Long-Term Temperature Trend Analysis (2013–2025)
 
-To extract long-term temperature signals from seasonal noise, I applied non-parametric LOESS (Locally Estimated Scatterplot Smoothing) to the daily mean temperature time series. The smoothed curve reveals a pronounced warming trend, particularly from 2020 through 2025, with mean daily temperatures increasing from approximately 26 °C in 2013 to over 31 °C in 2025.
+To extract long-term temperature signals from seasonal noise, I applied non-parametric LOESS (Locally Estimated Scatterplot Smoothing) to the daily mean temperature time series. The smoothed curve reveals long-term thermal variability across the study period, with the smoothed baseline temperature increasing from approximately 26.0 °C in 2013, stabilizing around 27.5 °C to 28.5 °C between 2015 and 2024, and rising sharply toward over 31.0 °C by late 2025, while daily mean temperatures span from approximately 14.0 °C to 18.0 °C during winter troughs to approximately 36.0 °C to 38.5 °C at summer peaks.
 
 ![](../result/bandar-abbas/long-term%20temperature%20overview%20(2013–2025).png)
 

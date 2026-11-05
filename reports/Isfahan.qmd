@@ -57,8 +57,7 @@ I defined extreme temperature days as those exceeding two standard deviations (Â
 Very hot extreme days were concentrated in spring and early summer, occurring most frequently in May (41 days), followed by April (34 days), March (22 days), July (18 days), and February and June (15 days each).
 
 February recorded 28 extreme-temperature days (13 very cold and 15 very hot days), indicating substantial transitional variability in the occurrence of temperature extremes.
-In total, seven months exhibited both hot and cold extreme events (January: 24 cold, 4 hot; February: 13 cold, 15 hot; March: 3 cold, 22 hot; April: 2 cold, 34 hot; July: 9 cold, 18 hot; August: 43 cold, 1 hot; December: 33 cold, 2 hot), highlighting distinct intra-seasonal thermal swings in Isfahan
-.
+In total, seven months exhibited both hot and cold extreme events (January: 24 cold, 4 hot; February: 13 cold, 15 hot; March: 3 cold, 22 hot; April: 2 cold, 34 hot; July: 9 cold, 18 hot; August: 43 cold, 1 hot; December: 33 cold, 2 hot), highlighting distinct intra-seasonal thermal swings in Isfahan.
 
 
 ![](../result/isfahan/extreme%20temperature%20days%20by%20month%20(hot%20vs%20cold).png)

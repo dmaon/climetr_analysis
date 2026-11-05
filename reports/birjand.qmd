@@ -11,7 +11,7 @@ Birjand, the capital of South Khorasan Province in eastern Iran, features a semi
 
 ## Long-Term Temperature Trend Analysis (2013–2025)
 
-To extract long-term temperature signals from seasonal noise, I applied non-parametric LOESS (Locally Estimated Scatterplot Smoothing) to the daily mean temperature time series. The smoothed curve reveals a subtle warming trend from 2021 through 2025, with mean daily temperatures increasing from approximately 13 °C to over 15 °C in 2025.
+To extract long-term temperature signals from seasonal noise, I applied non-parametric LOESS (Locally Estimated Scatterplot Smoothing) to the daily mean temperature time series. The smoothed curve reveals long-term thermal variability across the study period, with the smoothed baseline temperature starting at approximately 12.0 °C in 2013, fluctuating between 13.0 °C and 14.3 °C from 2014 through 2023 (with a slight dip near 12.8 °C in 2019–2020), and rising steadily from 2024 toward approximately 17.0 °C to 17.5 °C by late 2025. Concurrently, daily mean temperatures span from typical winter troughs of approximately −5.0 °C to −9.0 °C (with a severe historical cold drop plunging to nearly −14.0 °C in early 2023) to summer peaks of approximately 28.0 °C to 30.0 °C (reaching 31.0 °C to 32.0 °C during peak warm events).
 
 ![](../result/birjand/long-term%20temperature%20overview%20(2013–2025).png)
 
