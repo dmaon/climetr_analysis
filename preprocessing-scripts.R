@@ -33,7 +33,7 @@ preprocessing <- function(
   # Remove NA values
   find_na_rows <- apply(is.na(my_data[, !names(my_data) %in% exclude_cols]), 1, all)
   idx_of_na_rows <- which(find_na_rows)
-  my_data <- my_data
+  my_data <- my_data[-idx_of_na_rows, ]
   
   
   # Rename columns names
