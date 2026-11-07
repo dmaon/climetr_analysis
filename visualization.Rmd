@@ -592,8 +592,8 @@ ggplot(yearly_summary, aes(x = as.factor(year), y = count, fill = type)) +
     color = "black"
   ) +
   scale_fill_manual(
-    values = c("total_extreme"   = "#4575b4", 
-               "ramadan_extreme" = "#d73027"),
+    values = c("total_extreme"   = "#999999", 
+               "ramadan_extreme" = "#E69F00"),
     labels = c("total_extreme"   = "Full Year", 
                "ramadan_extreme" = "Ramadan")
   ) +
