@@ -402,7 +402,7 @@ chart_year_by_year_comparison <- function(
     ) +
     scale_fill_manual(
       values = c("total_extreme"   = "#999999", 
-                 "ramadan_extreme" = "#d73027"),
+                 "ramadan_extreme" = "#E69F00"),
       labels = c("total_extreme"   = "Full Year", 
                  "ramadan_extreme" = "Ramadan")
     ) +
@@ -638,7 +638,7 @@ for (dataset_path in datasets_list) {
   visualizations(
     dataset_file_path = paste0(work_directory, 'datasets\\', dataset_path),
     result_export_path = paste0(path, "\\"),
-    city_name = city_name
+    city_name = stringr::str_to_title(city_name)
   )
 }
 
