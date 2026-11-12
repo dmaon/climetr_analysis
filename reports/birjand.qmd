@@ -29,7 +29,9 @@ The 2024 daily mean temperature time series clearly demonstrates the expected si
 ## Monthly Heat Index Trends and Statistical Testing
 
 By fitting Ordinary Least Squares (OLS) linear regression models and executing the non-parametric Mann-Kendall test on monthly mean Heat Index values, I evaluated temperature trends for each month across the 13-year period. Statistically significant warming trends were identified in only two of the twelve months:
+
 **July**: Regression slope of +0.15 °C/year (cumulative change ≈ +1.81 °C, p ≈ 0.008–0.024).
+
 **November**: Regression slope of +0.30 °C/year (cumulative change ≈ +3.54 °C, p ≈ 0.010–0.024).
 In the remaining ten months, no statistically significant upward or downward trends were detected (p > 0.05). The July Heat Index increase may impact urban water demand and cooling energy consumption, whereas the marked warming in November alters heating demand, agricultural water requirements, and localized frost risk patterns.
 
