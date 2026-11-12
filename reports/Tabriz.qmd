@@ -19,7 +19,7 @@ To extract long-term temperature signals from seasonal noise, I applied non-para
 
 The 2024 daily mean temperature time series clearly demonstrates the expected sinusoidal seasonal cycle
 . To evaluate temperature anomalies during specific temporal windows, I calculated the 30-day rolling average temperature on the final day of Ramadan and compared it against historical data for the same calendar date across all study years
-. For 2025, with Ramadan concluding in late March, the 30-day rolling average on the final day was recorded at 3.94 °C, which is higher than the historical mean of 2.86 °C for that calendar date across 2013–2025 (representing a positive anomaly of +1.08 °C).
+. For 2025, with Ramadan concluding in late March, the 30-day rolling average on the final day was recorded at 3.93 °C, which is higher than the historical mean of 2.86 °C for that calendar date across 2013–2025 (representing a positive anomaly of +1.07 °C).
 
 ![](../result/tabriz/yearly%20temperature%20(2024).png)
 
