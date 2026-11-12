@@ -121,9 +121,10 @@ To clean the raw NASA POWER datasets and compute engineered biometeorological fe
 source("scripts/preprocessing-scripts.R")
 
 # Example: Process a city dataset
-clean_data <- preprocess_city_data(
-  dataset_file_path = "datasets/POWER_Point_Daily_20130101_20251123_BandarAbbas.csv",
-  output_file_path  = "datasets/bandar-abbas_clean_dataset.csv"
+clean_data <- preprocessing(
+  dataset_file_path        = "datasets/POWER_Point_Daily_20130101_20251123_BandarAbbas.csv",
+  dataset_export_file_path = "datasets/bandar-abbas_clean_dataset.csv",
+  dataset_skip = 20
 )
 ```
 
